@@ -1,0 +1,2476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Content Tasks | ContentAI</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b12;
+            color: white;
+        }
+
+        /* ================= LAYOUT ================= */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            width: 250px;
+            background: #10101a;
+            border-right: 1px solid #29293a;
+            padding: 25px 15px;
+
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #a855f7;
+            padding: 10px 15px 30px;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 14px 15px;
+            margin-bottom: 8px;
+
+            text-decoration: none;
+            color: #aaa;
+
+            border-radius: 8px;
+
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            background: #2b173d;
+            color: #c084fc;
+        }
+
+        .nav-link.active {
+            background: #2b173d;
+            color: #a855f7;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .topbar p {
+            color: #999;
+            margin-top: 8px;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .btn {
+            background: #a855f7;
+            color: white;
+
+            border: none;
+            border-radius: 8px;
+
+            padding: 12px 18px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #c084fc;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 12px;
+
+            padding: 22px;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+
+            color: #999;
+
+            font-size: 14px;
+        }
+
+        .number {
+            margin-top: 10px;
+
+            font-size: 30px;
+
+            font-weight: bold;
+        }
+
+        .purple {
+            color: #a855f7;
+        }
+
+        .blue {
+            color: #38bdf8;
+        }
+
+        .green {
+            color: #22c55e;
+        }
+
+        .yellow {
+            color: #facc15;
+        }
+
+        /* ================= CONTROLS ================= */
+
+        .controls {
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 20px;
+        }
+
+        .search {
+            flex: 1;
+
+            min-width: 250px;
+
+            padding: 13px 15px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            color: white;
+
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: #a855f7;
+        }
+
+        .filter-btn {
+            padding: 12px 15px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            color: #aaa;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #2b173d;
+
+            color: #a855f7;
+
+            border-color: #a855f7;
+        }
+
+        /* ================= TASK GRID ================= */
+
+        .task-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 18px;
+        }
+
+        .task-card {
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            transition: 0.2s;
+        }
+
+        .task-card:hover {
+            border-color: #6b21a8;
+
+            transform: translateY(-2px);
+        }
+
+        .task-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 10px;
+
+            margin-bottom: 15px;
+        }
+
+        .task-title {
+            font-size: 17px;
+
+            font-weight: bold;
+
+            line-height: 1.4;
+        }
+
+        .status {
+            padding: 6px 10px;
+
+            border-radius: 15px;
+
+            font-size: 10px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+        .status-progress {
+            background: #102f3b;
+            color: #38bdf8;
+        }
+
+        .status-completed {
+            background: #12351f;
+            color: #22c55e;
+        }
+
+        .status-draft {
+            background: #382a13;
+            color: #facc15;
+        }
+
+        .status-review {
+            background: #2b173d;
+            color: #c084fc;
+        }
+
+        .task-description {
+            color: #999;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin-bottom: 18px;
+        }
+
+        .task-info {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 12px;
+
+            margin-bottom: 18px;
+        }
+
+        .info-box {
+            background: #0f0f17;
+
+            padding: 10px;
+
+            border-radius: 7px;
+        }
+
+        .info-label {
+            color: #666;
+
+            font-size: 11px;
+
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #ddd;
+
+            font-size: 13px;
+        }
+
+        .task-actions {
+            display: flex;
+
+            gap: 8px;
+
+            border-top: 1px solid #29293a;
+
+            padding-top: 15px;
+        }
+
+        .small-btn {
+            padding: 9px 12px;
+
+            background: #1b1b27;
+
+            color: #bbb;
+
+            border: 1px solid #29293a;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+        .small-btn:hover {
+            border-color: #a855f7;
+
+            color: #c084fc;
+        }
+
+        .delete-btn:hover {
+            border-color: #ef4444;
+
+            color: #ef4444;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.75);
+
+            z-index: 1000;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .modal-box {
+            width: 100%;
+
+            max-width: 550px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 14px;
+
+            padding: 25px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            color: #aaa;
+
+            font-size: 25px;
+
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+
+            color: #aaa;
+
+            font-size: 13px;
+
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+
+            padding: 12px;
+
+            background: #0b0b12;
+
+            color: white;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            outline: none;
+        }
+
+        .form-group textarea {
+            height: 110px;
+
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #a855f7;
+        }
+
+        .modal-footer {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+        .cancel-btn {
+            padding: 12px 18px;
+
+            background: #29293a;
+
+            border: none;
+
+            color: white;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            grid-column: 1 / -1;
+
+            text-align: center;
+
+            padding: 70px 20px;
+
+            color: #777;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+
+            margin-bottom: 15px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .task-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+
+                width: 100%;
+
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            ✨ <span>CONTENT</span>AI
+
+        </div>
+
+
+        <a href="dashboard.html"
+           class="nav-link">
+
+            ✨ Dashboard
+
+        </a>
+
+
+        <a href="tasks.html"
+           class="nav-link active">
+
+            📝 Content Tasks
+
+        </a>
+
+
+        <a href="analytics.html"
+           class="nav-link">
+
+            📊 Analytics
+
+        </a>
+
+
+        <a href="../index.html"
+           class="nav-link">
+
+            🏠 Home
+
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+        <!-- ================= TOPBAR ================= -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Content Tasks
+                </h1>
+
+                <p>
+                    Create and manage your content production tasks.
+                </p>
+
+            </div>
+
+
+            <button
+                class="btn"
+                onclick="openTaskModal()">
+
+                + New Task
+
+            </button>
+
+        </div>
+
+
+        <!-- ================= STATS ================= -->
+
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Total Tasks
+                </h3>
+
+                <div
+                    class="number purple"
+                    id="totalTasks">
+
+                    8
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    In Progress
+                </h3>
+
+                <div
+                    class="number blue"
+                    id="progressTasks">
+
+                    3
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Completed
+                </h3>
+
+                <div
+                    class="number green"
+                    id="completedTasks">
+
+                    3
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Drafts
+                </h3>
+
+                <div
+                    class="number yellow"
+                    id="draftTasks">
+
+                    2
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ================= SEARCH & FILTER ================= -->
+
+        <div class="controls">
+
+
+            <input
+                type="text"
+                class="search"
+                id="searchInput"
+                placeholder="Search content tasks..."
+                onkeyup="filterTasks()"
+            >
+
+
+            <button
+                class="filter-btn active"
+                onclick="setFilter('all', this)">
+
+                All
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('progress', this)">
+
+                In Progress
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('completed', this)">
+
+                Completed
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('draft', this)">
+
+                Drafts
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('review', this)">
+
+                Review
+
+            </button>
+
+
+        </div>
+
+
+        <!-- ================= TASK GRID ================= -->
+
+        <section
+            class="task-grid"
+            id="taskGrid">
+
+
+            <!-- TASK 1 -->
+
+            <div
+                class="task-card"
+                data-status="progress"
+                data-search="ai blog artificial intelligence technology">
+
+                <div class="task-top">
+
+                    <div class="task-title">
+                        Write AI Technology Blog
+                    </div>
+
+                    <span class="status status-progress">
+                        IN PROGRESS
+                    </span>
+
+                </div>
+
+
+                <div class="task-description">
+                    Create a detailed blog post explaining
+                    recent developments in artificial intelligence.
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            TYPE
+                        </div>
+
+                        <div class="info-value">
+                            Blog Post
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            DUE DATE
+                        </div>
+
+                        <div class="info-value">
+                            Oct 08, 2026
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewTask(
+                            'Write AI Technology Blog',
+                            'Create a detailed blog post explaining recent developments in artificial intelligence.',
+                            'Blog Post',
+                            'Oct 08, 2026',
+                            'In Progress'
+                        )">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="small-btn"
+                        onclick="changeStatus(this)">
+
+                        Complete
+
+                    </button>
+
+
+                    <button
+                        class="small-btn delete-btn"
+                        onclick="deleteTask(this)">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASK 2 -->
+
+            <div
+                class="task-card"
+                data-status="completed"
+                data-search="productivity social media tips">
+
+                <div class="task-top">
+
+                    <div class="task-title">
+                        Productivity Social Media Campaign
+                    </div>
+
+                    <span class="status status-completed">
+                        COMPLETED
+                    </span>
+
+                </div>
+
+
+                <div class="task-description">
+                    Prepare five social media posts about
+                    productivity tips for students.
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            TYPE
+                        </div>
+
+                        <div class="info-value">
+                            Social Media
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            COMPLETED
+                        </div>
+
+                        <div class="info-value">
+                            Oct 05, 2026
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewTask(
+                            'Productivity Social Media Campaign',
+                            'Prepare five social media posts about productivity tips for students.',
+                            'Social Media',
+                            'Oct 05, 2026',
+                            'Completed'
+                        )">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="small-btn delete-btn"
+                        onclick="deleteTask(this)">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASK 3 -->
+
+            <div
+                class="task-card"
+                data-status="draft"
+                data-search="web development guide html css javascript">
+
+                <div class="task-top">
+
+                    <div class="task-title">
+                        Web Development Guide
+                    </div>
+
+                    <span class="status status-draft">
+                        DRAFT
+                    </span>
+
+                </div>
+
+
+                <div class="task-description">
+                    Prepare a beginner-friendly guide covering
+                    HTML, CSS and JavaScript fundamentals.
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            TYPE
+                        </div>
+
+                        <div class="info-value">
+                            Article
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            DUE DATE
+                        </div>
+
+                        <div class="info-value">
+                            Oct 12, 2026
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewTask(
+                            'Web Development Guide',
+                            'Prepare a beginner-friendly guide covering HTML, CSS and JavaScript fundamentals.',
+                            'Article',
+                            'Oct 12, 2026',
+                            'Draft'
+                        )">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="small-btn"
+                        onclick="changeStatus(this)">
+
+                        Start
+
+                    </button>
+
+
+                    <button
+                        class="small-btn delete-btn"
+                        onclick="deleteTask(this)">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASK 4 -->
+
+            <div
+                class="task-card"
+                data-status="review"
+                data-search="product launch marketing campaign">
+
+                <div class="task-top">
+
+                    <div class="task-title">
+                        Product Launch Campaign
+                    </div>
+
+                    <span class="status status-review">
+                        REVIEW
+                    </span>
+
+                </div>
+
+
+                <div class="task-description">
+                    Create marketing content for the upcoming
+                    product launch campaign.
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            TYPE
+                        </div>
+
+                        <div class="info-value">
+                            Marketing
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            DUE DATE
+                        </div>
+
+                        <div class="info-value">
+                            Oct 10, 2026
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewTask(
+                            'Product Launch Campaign',
+                            'Create marketing content for the upcoming product launch campaign.',
+                            'Marketing',
+                            'Oct 10, 2026',
+                            'Review'
+                        )">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="small-btn"
+                        onclick="changeStatus(this)">
+
+                        Complete
+
+                    </button>
+
+
+                    <button
+                        class="small-btn delete-btn"
+                        onclick="deleteTask(this)">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASK 5 -->
+
+            <div
+                class="task-card"
+                data-status="progress"
+                data-search="generative ai future blog">
+
+                <div class="task-top">
+
+                    <div class="task-title">
+                        Future of Generative AI
+                    </div>
+
+                    <span class="status status-progress">
+                        IN PROGRESS
+                    </span>
+
+                </div>
+
+
+                <div class="task-description">
+                    Research and write an article about the
+                    future applications of generative AI.
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            TYPE
+                        </div>
+
+                        <div class="info-value">
+                            Blog Post
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            DUE DATE
+                        </div>
+
+                        <div class="info-value">
+                            Oct 15, 2026
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewTask(
+                            'Future of Generative AI',
+                            'Research and write an article about the future applications of generative AI.',
+                            'Blog Post',
+                            'Oct 15, 2026',
+                            'In Progress'
+                        )">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="small-btn"
+                        onclick="changeStatus(this)">
+
+                        Complete
+
+                    </button>
+
+
+                    <button
+                        class="small-btn delete-btn"
+                        onclick="deleteTask(this)">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASK 6 -->
+
+            <div
+                class="task-card"
+                data-status="completed"
+                data-search="email newsletter technology">
+
+                <div class="task-top">
+
+                    <div class="task-title">
+                        Monthly Technology Newsletter
+                    </div>
+
+                    <span class="status status-completed">
+                        COMPLETED
+                    </span>
+
+                </div>
+
+
+                <div class="task-description">
+                    Prepare the monthly newsletter covering
+                    important technology updates.
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            TYPE
+                        </div>
+
+                        <div class="info-value">
+                            Newsletter
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            COMPLETED
+                        </div>
+
+                        <div class="info-value">
+                            Oct 03, 2026
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewTask(
+                            'Monthly Technology Newsletter',
+                            'Prepare the monthly newsletter covering important technology updates.',
+                            'Newsletter',
+                            'Oct 03, 2026',
+                            'Completed'
+                        )">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="small-btn delete-btn"
+                        onclick="deleteTask(this)">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASK 7 -->
+
+            <div
+                class="task-card"
+                data-status="draft"
+                data-search="product description ecommerce online store">
+
+                <div class="task-top">
+
+                    <div class="task-title">
+                        E-Commerce Product Descriptions
+                    </div>
+
+                    <span class="status status-draft">
+                        DRAFT
+                    </span>
+
+                </div>
+
+
+                <div class="task-description">
+                    Generate clear and engaging descriptions
+                    for new products in the online store.
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            TYPE
+                        </div>
+
+                        <div class="info-value">
+                            Product
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            DUE DATE
+                        </div>
+
+                        <div class="info-value">
+                            Oct 18, 2026
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewTask(
+                            'E-Commerce Product Descriptions',
+                            'Generate clear and engaging descriptions for new products in the online store.',
+                            'Product',
+                            'Oct 18, 2026',
+                            'Draft'
+                        )">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="small-btn"
+                        onclick="changeStatus(this)">
+
+                        Start
+
+                    </button>
+
+
+                    <button
+                        class="small-btn delete-btn"
+                        onclick="deleteTask(this)">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASK 8 -->
+
+            <div
+                class="task-card"
+                data-status="completed"
+                data-search="student ai article education">
+
+                <div class="task-top">
+
+                    <div class="task-title">
+                        AI in Education Article
+                    </div>
+
+                    <span class="status status-completed">
+                        COMPLETED
+                    </span>
+
+                </div>
+
+
+                <div class="task-description">
+                    Create an educational article explaining
+                    how AI can support modern learning.
+                </div>
+
+
+                <div class="task-info">
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            TYPE
+                        </div>
+
+                        <div class="info-value">
+                            Article
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-label">
+                            COMPLETED
+                        </div>
+
+                        <div class="info-value">
+                            Oct 01, 2026
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-actions">
+
+                    <button
+                        class="small-btn"
+                        onclick="viewTask(
+                            'AI in Education Article',
+                            'Create an educational article explaining how AI can support modern learning.',
+                            'Article',
+                            'Oct 01, 2026',
+                            'Completed'
+                        )">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="small-btn delete-btn"
+                        onclick="deleteTask(this)">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- ==================================================
+     NEW TASK MODAL
+================================================== -->
+
+<div
+    class="modal"
+    id="taskModal">
+
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <h2>
+                Create New Content Task
+            </h2>
+
+
+            <span
+                class="close"
+                onclick="closeTaskModal()">
+
+                &times;
+
+            </span>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Task Title
+            </label>
+
+            <input
+                type="text"
+                id="taskTitle"
+                placeholder="Example: AI Blog Post"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Content Type
+            </label>
+
+            <select id="taskType">
+
+                <option>
+                    Blog Post
+                </option>
+
+                <option>
+                    Article
+                </option>
+
+                <option>
+                    Social Media
+                </option>
+
+                <option>
+                    Marketing
+                </option>
+
+                <option>
+                    Newsletter
+                </option>
+
+                <option>
+                    Product Description
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                id="taskDescription"
+                placeholder="Describe the content task..."></textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Due Date
+            </label>
+
+            <input
+                type="date"
+                id="taskDate"
+            >
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="cancel-btn"
+                onclick="closeTaskModal()">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                class="btn"
+                onclick="createTask()">
+
+                Create Task
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==================================================
+     VIEW TASK MODAL
+================================================== -->
+
+<div
+    class="modal"
+    id="viewModal">
+
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <h2 id="viewTitle">
+                Task Details
+            </h2>
+
+
+            <span
+                class="close"
+                onclick="closeViewModal()">
+
+                &times;
+
+            </span>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+            <div
+                id="viewDescription"
+                style="
+                    color:#ccc;
+                    line-height:1.6;
+                ">
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Content Type
+            </label>
+
+            <div
+                id="viewType"
+                style="color:#ccc;">
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Due Date
+            </label>
+
+            <div
+                id="viewDate"
+                style="color:#ccc;">
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Status
+            </label>
+
+            <div
+                id="viewStatus"
+                style="color:#c084fc;">
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn"
+                onclick="closeViewModal()">
+
+                Close
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+    let currentFilter = "all";
+
+
+    /* ==================================================
+       OPEN TASK MODAL
+    ================================================== */
+
+    function openTaskModal() {
+
+        document
+            .getElementById("taskModal")
+            .style.display = "flex";
+
+    }
+
+
+    /* ==================================================
+       CLOSE TASK MODAL
+    ================================================== */
+
+    function closeTaskModal() {
+
+        document
+            .getElementById("taskModal")
+            .style.display = "none";
+
+    }
+
+
+    /* ==================================================
+       CREATE TASK
+    ================================================== */
+
+    function createTask() {
+
+
+        const title =
+            document
+                .getElementById("taskTitle")
+                .value
+                .trim();
+
+
+        const type =
+            document
+                .getElementById("taskType")
+                .value;
+
+
+        const description =
+            document
+                .getElementById("taskDescription")
+                .value
+                .trim();
+
+
+        const date =
+            document
+                .getElementById("taskDate")
+                .value;
+
+
+        if (
+            title === "" ||
+            description === "" ||
+            date === ""
+        ) {
+
+            alert(
+                "Please fill in all fields."
+            );
+
+            return;
+
+        }
+
+
+        const formattedDate =
+            new Date(date)
+                .toLocaleDateString(
+                    "en-US",
+                    {
+                        month: "short",
+                        day: "2-digit",
+                        year: "numeric"
+                    }
+                );
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "task-card";
+
+
+        card.setAttribute(
+            "data-status",
+            "draft"
+        );
+
+
+        card.setAttribute(
+            "data-search",
+            (
+                title +
+                " " +
+                type +
+                " " +
+                description
+            ).toLowerCase()
+        );
+
+
+        card.innerHTML = `
+
+            <div class="task-top">
+
+                <div class="task-title">
+                    ${title}
+                </div>
+
+                <span class="status status-draft">
+                    DRAFT
+                </span>
+
+            </div>
+
+
+            <div class="task-description">
+                ${description}
+            </div>
+
+
+            <div class="task-info">
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        TYPE
+                    </div>
+
+                    <div class="info-value">
+                        ${type}
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        DUE DATE
+                    </div>
+
+                    <div class="info-value">
+                        ${formattedDate}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="task-actions">
+
+                <button
+                    class="small-btn"
+                    onclick="viewTask(
+                        '${escapeQuotes(title)}',
+                        '${escapeQuotes(description)}',
+                        '${escapeQuotes(type)}',
+                        '${formattedDate}',
+                        'Draft'
+                    )">
+
+                    View
+
+                </button>
+
+
+                <button
+                    class="small-btn"
+                    onclick="changeStatus(this)">
+
+                    Start
+
+                </button>
+
+
+                <button
+                    class="small-btn delete-btn"
+                    onclick="deleteTask(this)">
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        document
+            .getElementById("taskGrid")
+            .prepend(card);
+
+
+        closeTaskModal();
+
+
+        document
+            .getElementById("taskTitle")
+            .value = "";
+
+
+        document
+            .getElementById("taskDescription")
+            .value = "";
+
+
+        document
+            .getElementById("taskDate")
+            .value = "";
+
+
+        updateStats();
+
+
+        filterTasks();
+
+
+        alert(
+            "New content task created successfully!"
+        );
+
+    }
+
+
+    /* ==================================================
+       ESCAPE QUOTES
+    ================================================== */
+
+    function escapeQuotes(text) {
+
+        return text
+            .replace(/'/g, "\\'")
+            .replace(/"/g, "&quot;");
+
+    }
+
+
+    /* ==================================================
+       VIEW TASK
+    ================================================== */
+
+    function viewTask(
+        title,
+        description,
+        type,
+        date,
+        status
+    ) {
+
+
+        document
+            .getElementById("viewTitle")
+            .textContent = title;
+
+
+        document
+            .getElementById("viewDescription")
+            .textContent = description;
+
+
+        document
+            .getElementById("viewType")
+            .textContent = type;
+
+
+        document
+            .getElementById("viewDate")
+            .textContent = date;
+
+
+        document
+            .getElementById("viewStatus")
+            .textContent = status;
+
+
+        document
+            .getElementById("viewModal")
+            .style.display = "flex";
+
+    }
+
+
+    /* ==================================================
+       CLOSE VIEW MODAL
+    ================================================== */
+
+    function closeViewModal() {
+
+        document
+            .getElementById("viewModal")
+            .style.display = "none";
+
+    }
+
+
+    /* ==================================================
+       DELETE TASK
+    ================================================== */
+
+    function deleteTask(button) {
+
+
+        const confirmation =
+            confirm(
+                "Are you sure you want to delete this task?"
+            );
+
+
+        if (!confirmation) {
+
+            return;
+
+        }
+
+
+        button
+            .closest(".task-card")
+            .remove();
+
+
+        updateStats();
+
+
+        filterTasks();
+
+    }
+
+
+    /* ==================================================
+       CHANGE STATUS
+    ================================================== */
+
+    function changeStatus(button) {
+
+
+        const card =
+            button.closest(".task-card");
+
+
+        const status =
+            card.querySelector(".status");
+
+
+        const current =
+            card.getAttribute(
+                "data-status"
+            );
+
+
+        if (
+            current === "draft"
+        ) {
+
+            card.setAttribute(
+                "data-status",
+                "progress"
+            );
+
+            status.className =
+                "status status-progress";
+
+            status.textContent =
+                "IN PROGRESS";
+
+            button.textContent =
+                "Complete";
+
+        }
+
+        else {
+
+            card.setAttribute(
+                "data-status",
+                "completed"
+            );
+
+            status.className =
+                "status status-completed";
+
+            status.textContent =
+                "COMPLETED";
+
+            button.remove();
+
+        }
+
+
+        updateStats();
+
+
+        filterTasks();
+
+    }
+
+
+    /* ==================================================
+       UPDATE STATISTICS
+    ================================================== */
+
+    function updateStats() {
+
+
+        const cards =
+            document.querySelectorAll(
+                ".task-card"
+            );
+
+
+        let progress = 0;
+
+        let completed = 0;
+
+        let drafts = 0;
+
+
+        cards.forEach(function(card) {
+
+
+            const status =
+                card.getAttribute(
+                    "data-status"
+                );
+
+
+            if (
+                status === "progress"
+            ) {
+
+                progress++;
+
+            }
+
+
+            if (
+                status === "completed"
+            ) {
+
+                completed++;
+
+            }
+
+
+            if (
+                status === "draft"
+            ) {
+
+                drafts++;
+
+            }
+
+        });
+
+
+        document
+            .getElementById("totalTasks")
+            .textContent =
+            cards.length;
+
+
+        document
+            .getElementById("progressTasks")
+            .textContent =
+            progress;
+
+
+        document
+            .getElementById("completedTasks")
+            .textContent =
+            completed;
+
+
+        document
+            .getElementById("draftTasks")
+            .textContent =
+            drafts;
+
+    }
+
+
+    /* ==================================================
+       SET FILTER
+    ================================================== */
+
+    function setFilter(
+        filter,
+        button
+    ) {
+
+
+        currentFilter = filter;
+
+
+        document
+            .querySelectorAll(".filter-btn")
+            .forEach(function(btn) {
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+        button.classList.add(
+            "active"
+        );
+
+
+        filterTasks();
+
+    }
+
+
+    /* ==================================================
+       FILTER TASKS
+    ================================================== */
+
+    function filterTasks() {
+
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const cards =
+            document.querySelectorAll(
+                ".task-card"
+            );
+
+
+        cards.forEach(function(card) {
+
+
+            const status =
+                card.getAttribute(
+                    "data-status"
+                );
+
+
+            const text =
+                card.getAttribute(
+                    "data-search"
+                );
+
+
+            const searchMatch =
+                text.includes(search);
+
+
+            let filterMatch = true;
+
+
+            if (
+                currentFilter !== "all"
+            ) {
+
+                filterMatch =
+                    status === currentFilter;
+
+            }
+
+
+            if (
+                searchMatch &&
+                filterMatch
+            ) {
+
+                card.style.display =
+                    "block";
+
+            }
+
+            else {
+
+                card.style.display =
+                    "none";
+
+            }
+
+        });
+
+    }
+
+
+    /* ==================================================
+       CLOSE MODALS WHEN CLICKING OUTSIDE
+    ================================================== */
+
+    window.onclick = function(event) {
+
+
+        const taskModal =
+            document.getElementById(
+                "taskModal"
+            );
+
+
+        const viewModal =
+            document.getElementById(
+                "viewModal"
+            );
+
+
+        if (
+            event.target === taskModal
+        ) {
+
+            closeTaskModal();
+
+        }
+
+
+        if (
+            event.target === viewModal
+        ) {
+
+            closeViewModal();
+
+        }
+
+    };
+
+
+</script>
+
+
+</body>
+
+</html>

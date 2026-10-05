@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Agent - Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #120d24;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1b1435;
+            padding: 25px 18px;
+            border-right: 1px solid #302451;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .logo span {
+            color: #a78bfa;
+        }
+
+        .nav-title {
+            font-size: 12px;
+            color: #8f88a8;
+            margin: 20px 12px 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: #c8c2dc;
+            padding: 13px 14px;
+            margin: 6px 0;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #302354;
+            color: white;
+        }
+
+        .nav-link.active {
+            border-left: 3px solid #a78bfa;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+        }
+
+        .topbar p {
+            color: #9992b3;
+            margin-top: 6px;
+        }
+
+        .profile {
+            background: #211a3c;
+            padding: 11px 18px;
+            border-radius: 12px;
+            color: #d8d2ea;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #1b1435;
+            border: 1px solid #302451;
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #9c95b5;
+            font-weight: normal;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .stat-change {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #a78bfa;
+        }
+
+        /* Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #1b1435;
+            border: 1px solid #302451;
+            border-radius: 15px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+        }
+
+        .view-all {
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        /* Tasks */
+        .task {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #2b2345;
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task-info {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .check {
+            width: 19px;
+            height: 19px;
+            border: 2px solid #776c98;
+            border-radius: 5px;
+        }
+
+        .check.completed {
+            background: #a78bfa;
+            border-color: #a78bfa;
+        }
+
+        .task-title {
+            font-size: 14px;
+        }
+
+        .task-date {
+            font-size: 12px;
+            color: #85809b;
+            margin-top: 4px;
+        }
+
+        .priority {
+            padding: 5px 9px;
+            border-radius: 7px;
+            font-size: 11px;
+        }
+
+        .high {
+            background: #47283b;
+            color: #f5a4c4;
+        }
+
+        .medium {
+            background: #40352a;
+            color: #e6c27a;
+        }
+
+        .low {
+            background: #293b3a;
+            color: #9ed4ca;
+        }
+
+        /* Progress */
+        .progress-item {
+            margin-bottom: 22px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .progress-info span:last-child {
+            color: #a78bfa;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #2c2544;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #a78bfa;
+            border-radius: 10px;
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: #272044;
+            border: 1px solid #3a3158;
+            color: #ddd7ec;
+            padding: 15px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #352b55;
+            transform: translateY(-2px);
+        }
+
+        /* Activity */
+        .activity {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .activity-icon {
+            width: 35px;
+            height: 35px;
+            background: #302552;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            color: #c5bfd7;
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: #77718e;
+            margin-top: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            AI <span>Agents</span>
+        </div>
+
+        <div class="nav-title">Productivity</div>
+
+        <a href="dashboard.html" class="nav-link active">
+            🏠 Dashboard
+        </a>
+
+        <a href="tasks.html" class="nav-link">
+            ✓ Tasks
+        </a>
+
+        <a href="analytics.html" class="nav-link">
+            📊 Analytics
+        </a>
+
+        <div class="nav-title">Main</div>
+
+        <a href="../index.html" class="nav-link">
+            ← Home
+        </a>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+
+            <div>
+                <h1>Productivity Dashboard</h1>
+                <p>Manage your tasks, goals and daily productivity.</p>
+            </div>
+
+            <div class="profile">
+                👤 Productivity User
+            </div>
+
+        </div>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <h3>Total Tasks</h3>
+                <div class="stat-number">24</div>
+                <div class="stat-change">+4 this week</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Completed</h3>
+                <div class="stat-number">18</div>
+                <div class="stat-change">75% completion</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Focus Hours</h3>
+                <div class="stat-number">12.5</div>
+                <div class="stat-change">+2.3 this week</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Goals</h3>
+                <div class="stat-number">6</div>
+                <div class="stat-change">4 on track</div>
+            </div>
+
+        </section>
+
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+
+            <!-- Left Column -->
+            <div>
+
+                <!-- Today's Tasks -->
+                <div class="card">
+
+                    <div class="card-header">
+                        <h2>Today's Tasks</h2>
+                        <a href="tasks.html" class="view-all">View all</a>
+                    </div>
+
+                    <div class="task">
+
+                        <div class="task-info">
+                            <div class="check completed"></div>
+
+                            <div>
+                                <div class="task-title">
+                                    Review project requirements
+                                </div>
+
+                                <div class="task-date">
+                                    Completed today
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="priority high">
+                            High
+                        </span>
+
+                    </div>
+
+
+                    <div class="task">
+
+                        <div class="task-info">
+                            <div class="check"></div>
+
+                            <div>
+                                <div class="task-title">
+                                    Complete dashboard design
+                                </div>
+
+                                <div class="task-date">
+                                    Due today
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="priority high">
+                            High
+                        </span>
+
+                    </div>
+
+
+                    <div class="task">
+
+                        <div class="task-info">
+                            <div class="check"></div>
+
+                            <div>
+                                <div class="task-title">
+                                    Organize project files
+                                </div>
+
+                                <div class="task-date">
+                                    Due today
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="priority medium">
+                            Medium
+                        </span>
+
+                    </div>
+
+
+                    <div class="task">
+
+                        <div class="task-info">
+                            <div class="check"></div>
+
+                            <div>
+                                <div class="task-title">
+                                    Plan tomorrow's schedule
+                                </div>
+
+                                <div class="task-date">
+                                    Due today
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="priority low">
+                            Low
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Productivity Progress -->
+                <div class="card">
+
+                    <div class="card-header">
+                        <h2>Productivity Progress</h2>
+                        <span class="view-all">This Week</span>
+                    </div>
+
+                    <div class="progress-item">
+
+                        <div class="progress-info">
+                            <span>Tasks Completed</span>
+                            <span>75%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:75%"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-item">
+
+                        <div class="progress-info">
+                            <span>Daily Goals</span>
+                            <span>82%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:82%"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-item">
+
+                        <div class="progress-info">
+                            <span>Focus Time</span>
+                            <span>68%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:68%"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Right Column -->
+            <div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+
+                    <div class="card-header">
+                        <h2>Quick Actions</h2>
+                    </div>
+
+                    <div class="quick-actions">
+
+                        <button class="action-btn" onclick="addTask()">
+                            ➕<br>
+                            Add Task
+                        </button>
+
+                        <button class="action-btn" onclick="startFocus()">
+                            🎯<br>
+                            Focus Mode
+                        </button>
+
+                        <button class="action-btn" onclick="createGoal()">
+                            🏆<br>
+                            New Goal
+                        </button>
+
+                        <button class="action-btn" onclick="showMessage()">
+                            🤖<br>
+                            Ask Agent
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Recent Activity -->
+                <div class="card">
+
+                    <div class="card-header">
+                        <h2>Recent Activity</h2>
+                    </div>
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            ✓
+                        </div>
+
+                        <div>
+                            <div class="activity-text">
+                                Completed “Review project requirements”
+                            </div>
+
+                            <div class="activity-time">
+                                20 minutes ago
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            🎯
+                        </div>
+
+                        <div>
+                            <div class="activity-text">
+                                Started a new focus session
+                            </div>
+
+                            <div class="activity-time">
+                                1 hour ago
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            ➕
+                        </div>
+
+                        <div>
+                            <div class="activity-text">
+                                Added “Organize project files”
+                            </div>
+
+                            <div class="activity-time">
+                                2 hours ago
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    function addTask() {
+        alert("Add Task feature opened!");
+    }
+
+    function startFocus() {
+        alert("Focus Mode started! Stay focused on your current task.");
+    }
+
+    function createGoal() {
+        alert("New Goal feature opened!");
+    }
+
+    function showMessage() {
+        alert("Productivity Agent: How can I help you work more efficiently?");
+    }
+
+</script>
+
+</body>
+</html>

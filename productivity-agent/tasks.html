@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Agent - Tasks</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #120d24;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1b1435;
+            padding: 25px 18px;
+            border-right: 1px solid #302451;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #a78bfa;
+        }
+
+        .nav-title {
+            font-size: 12px;
+            color: #8f88a8;
+            margin: 20px 12px 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: #c8c2dc;
+            padding: 13px 14px;
+            margin: 6px 0;
+            border-radius: 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #302354;
+            color: white;
+        }
+
+        .nav-link.active {
+            border-left: 3px solid #a78bfa;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+        }
+
+        .topbar p {
+            color: #9992b3;
+            margin-top: 6px;
+        }
+
+        .profile {
+            background: #211a3c;
+            padding: 11px 18px;
+            border-radius: 12px;
+            color: #d8d2ea;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #1b1435;
+            border: 1px solid #302451;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .stat-card h3 {
+            color: #9c95b5;
+            font-size: 14px;
+            font-weight: normal;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 29px;
+            font-weight: bold;
+        }
+
+        .stat-info {
+            color: #a78bfa;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: #1b1435;
+            border: 1px solid #302451;
+            border-radius: 15px;
+            padding: 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search {
+            flex: 1;
+            min-width: 200px;
+            background: #251d42;
+            border: 1px solid #3a3158;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 9px;
+            outline: none;
+        }
+
+        select {
+            background: #251d42;
+            border: 1px solid #3a3158;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 9px;
+            outline: none;
+        }
+
+        .add-btn {
+            background: #a78bfa;
+            color: #160f2b;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 9px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .add-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Task List */
+        .task-list {
+            background: #1b1435;
+            border: 1px solid #302451;
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .task-list h2 {
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 17px 5px;
+            border-bottom: 1px solid #2c2445;
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #756a94;
+            border-radius: 5px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox.done {
+            background: #a78bfa;
+            border-color: #a78bfa;
+        }
+
+        .task-title {
+            font-size: 15px;
+        }
+
+        .task-meta {
+            color: #85809b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .task-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 7px;
+            font-size: 11px;
+        }
+
+        .high {
+            background: #47283b;
+            color: #f3a6c6;
+        }
+
+        .medium {
+            background: #40352a;
+            color: #e4c27d;
+        }
+
+        .low {
+            background: #293b3a;
+            color: #9dd2c9;
+        }
+
+        .status {
+            background: #292244;
+            color: #bbb4d0;
+        }
+
+        .complete {
+            background: #293d35;
+            color: #9ed3bd;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 450px;
+            background: #1b1435;
+            border: 1px solid #3b3159;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .modal-box h2 {
+            margin-bottom: 20px;
+        }
+
+        .modal-box input,
+        .modal-box select {
+            width: 100%;
+            margin-bottom: 14px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .cancel-btn {
+            background: #30284a;
+            color: white;
+            border: none;
+            padding: 11px 17px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .task {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .task-right {
+                margin-left: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            AI <span>Agents</span>
+        </div>
+
+        <div class="nav-title">Productivity</div>
+
+        <a href="dashboard.html" class="nav-link">
+            🏠 Dashboard
+        </a>
+
+        <a href="tasks.html" class="nav-link active">
+            ✓ Tasks
+        </a>
+
+        <a href="analytics.html" class="nav-link">
+            📊 Analytics
+        </a>
+
+        <div class="nav-title">Main</div>
+
+        <a href="../index.html" class="nav-link">
+            ← Home
+        </a>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Productivity Tasks</h1>
+                <p>Organize and manage your daily tasks.</p>
+            </div>
+
+            <div class="profile">
+                👤 Productivity User
+            </div>
+
+        </div>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <h3>Total Tasks</h3>
+                <div class="stat-number" id="totalTasks">8</div>
+                <div class="stat-info">All tasks</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Pending</h3>
+                <div class="stat-number" id="pendingTasks">5</div>
+                <div class="stat-info">Need attention</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Completed</h3>
+                <div class="stat-number" id="completedTasks">3</div>
+                <div class="stat-info">Finished tasks</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>High Priority</h3>
+                <div class="stat-number" id="highTasks">3</div>
+                <div class="stat-info">Important tasks</div>
+            </div>
+
+        </section>
+
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+
+            <input
+                type="text"
+                class="search"
+                id="searchInput"
+                placeholder="Search tasks..."
+                oninput="filterTasks()"
+            >
+
+            <select id="statusFilter" onchange="filterTasks()">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+            </select>
+
+            <select id="priorityFilter" onchange="filterTasks()">
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+
+            <button class="add-btn" onclick="openModal()">
+                + Add Task
+            </button>
+
+        </div>
+
+
+        <!-- Task List -->
+        <section class="task-list">
+
+            <h2>My Tasks</h2>
+
+            <div id="taskContainer">
+
+                <div class="task"
+                     data-title="Complete dashboard design"
+                     data-status="pending"
+                     data-priority="high">
+
+                    <div class="task-left">
+
+                        <div class="checkbox"
+                             onclick="completeTask(this)">
+                        </div>
+
+                        <div>
+                            <div class="task-title">
+                                Complete dashboard design
+                            </div>
+
+                            <div class="task-meta">
+                                Due today • Design
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-right">
+                        <span class="badge high">High</span>
+                        <span class="badge status">Pending</span>
+                    </div>
+
+                </div>
+
+
+                <div class="task"
+                     data-title="Review project requirements"
+                     data-status="completed"
+                     data-priority="high">
+
+                    <div class="task-left">
+
+                        <div class="checkbox done"
+                             onclick="completeTask(this)">
+                        </div>
+
+                        <div>
+                            <div class="task-title">
+                                Review project requirements
+                            </div>
+
+                            <div class="task-meta">
+                                Completed today • Planning
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-right">
+                        <span class="badge high">High</span>
+                        <span class="badge complete">Completed</span>
+                    </div>
+
+                </div>
+
+
+                <div class="task"
+                     data-title="Organize project files"
+                     data-status="pending"
+                     data-priority="medium">
+
+                    <div class="task-left">
+
+                        <div class="checkbox"
+                             onclick="completeTask(this)">
+                        </div>
+
+                        <div>
+                            <div class="task-title">
+                                Organize project files
+                            </div>
+
+                            <div class="task-meta">
+                                Due today • Organization
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-right">
+                        <span class="badge medium">Medium</span>
+                        <span class="badge status">Pending</span>
+                    </div>
+
+                </div>
+
+
+                <div class="task"
+                     data-title="Prepare weekly schedule"
+                     data-status="pending"
+                     data-priority="medium">
+
+                    <div class="task-left">
+
+                        <div class="checkbox"
+                             onclick="completeTask(this)">
+                        </div>
+
+                        <div>
+                            <div class="task-title">
+                                Prepare weekly schedule
+                            </div>
+
+                            <div class="task-meta">
+                                Due tomorrow • Planning
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-right">
+                        <span class="badge medium">Medium</span>
+                        <span class="badge status">Pending</span>
+                    </div>
+
+                </div>
+
+
+                <div class="task"
+                     data-title="Read productivity article"
+                     data-status="completed"
+                     data-priority="low">
+
+                    <div class="task-left">
+
+                        <div class="checkbox done"
+                             onclick="completeTask(this)">
+                        </div>
+
+                        <div>
+                            <div class="task-title">
+                                Read productivity article
+                            </div>
+
+                            <div class="task-meta">
+                                Completed yesterday • Learning
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-right">
+                        <span class="badge low">Low</span>
+                        <span class="badge complete">Completed</span>
+                    </div>
+
+                </div>
+
+
+                <div class="task"
+                     data-title="Plan tomorrow's priorities"
+                     data-status="pending"
+                     data-priority="high">
+
+                    <div class="task-left">
+
+                        <div class="checkbox"
+                             onclick="completeTask(this)">
+                        </div>
+
+                        <div>
+                            <div class="task-title">
+                                Plan tomorrow's priorities
+                            </div>
+
+                            <div class="task-meta">
+                                Due tonight • Planning
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-right">
+                        <span class="badge high">High</span>
+                        <span class="badge status">Pending</span>
+                    </div>
+
+                </div>
+
+
+                <div class="task"
+                     data-title="Clean workspace"
+                     data-status="completed"
+                     data-priority="low">
+
+                    <div class="task-left">
+
+                        <div class="checkbox done"
+                             onclick="completeTask(this)">
+                        </div>
+
+                        <div>
+                            <div class="task-title">
+                                Clean workspace
+                            </div>
+
+                            <div class="task-meta">
+                                Completed yesterday • Organization
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-right">
+                        <span class="badge low">Low</span>
+                        <span class="badge complete">Completed</span>
+                    </div>
+
+                </div>
+
+
+                <div class="task"
+                     data-title="Set weekly goals"
+                     data-status="pending"
+                     data-priority="low">
+
+                    <div class="task-left">
+
+                        <div class="checkbox"
+                             onclick="completeTask(this)">
+                        </div>
+
+                        <div>
+                            <div class="task-title">
+                                Set weekly goals
+                            </div>
+
+                            <div class="task-meta">
+                                Due Friday • Goals
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="task-right">
+                        <span class="badge low">Low</span>
+                        <span class="badge status">Pending</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- Add Task Modal -->
+<div class="modal" id="taskModal">
+
+    <div class="modal-box">
+
+        <h2>Add New Task</h2>
+
+        <input
+            type="text"
+            id="newTask"
+            class="search"
+            placeholder="Task name"
+        >
+
+        <select id="newPriority">
+            <option value="high">High Priority</option>
+            <option value="medium" selected>Medium Priority</option>
+            <option value="low">Low Priority</option>
+        </select>
+
+        <div class="modal-actions">
+
+            <button class="cancel-btn" onclick="closeModal()">
+                Cancel
+            </button>
+
+            <button class="add-btn" onclick="addTask()">
+                Add Task
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function openModal() {
+        document.getElementById("taskModal").style.display = "flex";
+        document.getElementById("newTask").focus();
+    }
+
+
+    function closeModal() {
+        document.getElementById("taskModal").style.display = "none";
+    }
+
+
+    function addTask() {
+
+        const taskName =
+            document.getElementById("newTask").value.trim();
+
+        const priority =
+            document.getElementById("newPriority").value;
+
+        if (taskName === "") {
+            alert("Please enter a task name.");
+            return;
+        }
+
+        const taskContainer =
+            document.getElementById("taskContainer");
+
+        const task = document.createElement("div");
+
+        task.className = "task";
+
+        task.dataset.title = taskName.toLowerCase();
+        task.dataset.status = "pending";
+        task.dataset.priority = priority;
+
+        task.innerHTML = `
+            <div class="task-left">
+
+                <div class="checkbox"
+                     onclick="completeTask(this)">
+                </div>
+
+                <div>
+                    <div class="task-title">
+                        ${taskName}
+                    </div>
+
+                    <div class="task-meta">
+                        Added just now • New task
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="task-right">
+                <span class="badge ${priority}">
+                    ${priority.charAt(0).toUpperCase() + priority.slice(1)}
+                </span>
+
+                <span class="badge status">
+                    Pending
+                </span>
+            </div>
+        `;
+
+        taskContainer.prepend(task);
+
+        document.getElementById("newTask").value = "";
+
+        closeModal();
+
+        updateStats();
+    }
+
+
+    function completeTask(element) {
+
+        const task = element.closest(".task");
+
+        const statusBadge =
+            task.querySelector(".status, .complete");
+
+        if (task.dataset.status === "completed") {
+
+            task.dataset.status = "pending";
+
+            element.classList.remove("done");
+
+            statusBadge.className = "badge status";
+            statusBadge.textContent = "Pending";
+
+        } else {
+
+            task.dataset.status = "completed";
+
+            element.classList.add("done");
+
+            statusBadge.className = "badge complete";
+            statusBadge.textContent = "Completed";
+        }
+
+        updateStats();
+    }
+
+
+    function filterTasks() {
+
+        const search =
+            document.getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+        const status =
+            document.getElementById("statusFilter").value;
+
+        const priority =
+            document.getElementById("priorityFilter").value;
+
+        const tasks =
+            document.querySelectorAll(".task");
+
+        tasks.forEach(task => {
+
+            const title =
+                task.dataset.title.toLowerCase();
+
+            const taskStatus =
+                task.dataset.status;
+
+            const taskPriority =
+                task.dataset.priority;
+
+            const matchesSearch =
+                title.includes(search);
+
+            const matchesStatus =
+                status === "all" ||
+                taskStatus === status;
+
+            const matchesPriority =
+                priority === "all" ||
+                taskPriority === priority;
+
+            if (
+                matchesSearch &&
+                matchesStatus &&
+                matchesPriority
+            ) {
+                task.style.display = "flex";
+            } else {
+                task.style.display = "none";
+            }
+
+        });
+    }
+
+
+    function updateStats() {
+
+        const tasks =
+            document.querySelectorAll(".task");
+
+        let total = tasks.length;
+        let completed = 0;
+        let high = 0;
+
+        tasks.forEach(task => {
+
+            if (task.dataset.status === "completed") {
+                completed++;
+            }
+
+            if (task.dataset.priority === "high") {
+                high++;
+            }
+
+        });
+
+        document.getElementById("totalTasks")
+            .textContent = total;
+
+        document.getElementById("completedTasks")
+            .textContent = completed;
+
+        document.getElementById("pendingTasks")
+            .textContent = total - completed;
+
+        document.getElementById("highTasks")
+            .textContent = high;
+    }
+
+
+    window.onclick = function(event) {
+
+        const modal =
+            document.getElementById("taskModal");
+
+        if (event.target === modal) {
+            closeModal();
+        }
+
+    };
+
+</script>
+
+</body>
+</html>

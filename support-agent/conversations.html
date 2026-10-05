@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Conversations | SupportAI</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b12;
+            color: white;
+        }
+
+        /* ================= LAYOUT ================= */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            width: 250px;
+            background: #10101a;
+            border-right: 1px solid #29293a;
+            padding: 25px 15px;
+
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f97316;
+            padding: 10px 15px 30px;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 14px 15px;
+            margin-bottom: 8px;
+
+            text-decoration: none;
+            color: #aaa;
+
+            border-radius: 8px;
+
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            background: #382113;
+            color: #fb923c;
+        }
+
+        .nav-link.active {
+            background: #382113;
+            color: #f97316;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .topbar p {
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .btn {
+            border: none;
+            background: #f97316;
+            color: white;
+
+            padding: 12px 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #fb923c;
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search {
+            width: 100%;
+
+            padding: 13px 15px;
+
+            margin-bottom: 20px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            color: white;
+
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: #f97316;
+        }
+
+        /* ================= CONVERSATION AREA ================= */
+
+        .conversation-layout {
+            display: grid;
+
+            grid-template-columns: 330px 1fr;
+
+            height: 650px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+        }
+
+        /* ================= LEFT LIST ================= */
+
+        .conversation-list {
+            border-right: 1px solid #29293a;
+
+            overflow-y: auto;
+        }
+
+        .list-header {
+            padding: 18px;
+
+            border-bottom: 1px solid #29293a;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .list-header h3 {
+            margin: 0;
+        }
+
+        .conversation-item {
+            padding: 17px;
+
+            border-bottom: 1px solid #29293a;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .conversation-item:hover {
+            background: #191923;
+        }
+
+        .conversation-item.active {
+            background: #382113;
+
+            border-left: 3px solid #f97316;
+        }
+
+        .customer-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .customer-name {
+            font-weight: bold;
+        }
+
+        .time {
+            color: #777;
+            font-size: 11px;
+        }
+
+        .message-preview {
+            margin-top: 8px;
+
+            color: #999;
+
+            font-size: 13px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+        .status-dot {
+            display: inline-block;
+
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            margin-right: 5px;
+
+            background: #22c55e;
+        }
+
+        .status-closed {
+            background: #777;
+        }
+
+        /* ================= CHAT ================= */
+
+        .chat {
+            display: flex;
+
+            flex-direction: column;
+
+            min-width: 0;
+        }
+
+        .chat-header {
+            padding: 18px 22px;
+
+            border-bottom: 1px solid #29293a;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .customer-info h3 {
+            margin: 0;
+        }
+
+        .customer-info p {
+            margin: 6px 0 0;
+
+            color: #888;
+
+            font-size: 13px;
+        }
+
+        .chat-actions {
+            display: flex;
+
+            gap: 8px;
+        }
+
+        .small-btn {
+            background: #1b1b27;
+
+            border: 1px solid #29293a;
+
+            color: #aaa;
+
+            padding: 8px 12px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+        }
+
+        .small-btn:hover {
+            color: white;
+
+            border-color: #f97316;
+        }
+
+        /* ================= MESSAGES ================= */
+
+        .messages {
+            flex: 1;
+
+            padding: 25px;
+
+            overflow-y: auto;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 70%;
+
+            padding: 13px 16px;
+
+            border-radius: 12px;
+
+            line-height: 1.5;
+
+            font-size: 14px;
+        }
+
+        .message.customer {
+            align-self: flex-start;
+
+            background: #20202c;
+
+            border-bottom-left-radius: 3px;
+        }
+
+        .message.agent {
+            align-self: flex-end;
+
+            background: #7c2d12;
+
+            border-bottom-right-radius: 3px;
+        }
+
+        .message-name {
+            font-size: 11px;
+
+            color: #aaa;
+
+            margin-bottom: 5px;
+        }
+
+        .message-time {
+            font-size: 10px;
+
+            color: #888;
+
+            margin-top: 7px;
+
+            text-align: right;
+        }
+
+        /* ================= REPLY ================= */
+
+        .reply-area {
+            padding: 15px;
+
+            border-top: 1px solid #29293a;
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+        .reply-input {
+            flex: 1;
+
+            padding: 13px;
+
+            background: #0b0b12;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            color: white;
+
+            outline: none;
+        }
+
+        .reply-input:focus {
+            border-color: #f97316;
+        }
+
+        .send-btn {
+            background: #f97316;
+
+            border: none;
+
+            color: white;
+
+            padding: 0 20px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .send-btn:hover {
+            background: #fb923c;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            height: 100%;
+
+            color: #777;
+
+            text-align: center;
+
+            padding: 30px;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0,0,0,0.75);
+
+            z-index: 1000;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .modal-box {
+            width: 100%;
+
+            max-width: 500px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 14px;
+
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            font-size: 25px;
+
+            color: #aaa;
+
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #aaa;
+
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+
+            width: 100%;
+
+            padding: 12px;
+
+            background: #0b0b12;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            color: white;
+
+            outline: none;
+        }
+
+        .form-group textarea {
+            height: 90px;
+
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #f97316;
+        }
+
+        .modal-footer {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+        .cancel-btn {
+            background: #29293a;
+
+            border: none;
+
+            color: white;
+
+            padding: 12px 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+
+                width: calc(100% - 200px);
+
+                padding: 25px;
+            }
+
+            .conversation-layout {
+                grid-template-columns: 280px 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+
+                width: 100%;
+
+                padding: 20px;
+            }
+
+            .conversation-layout {
+                grid-template-columns: 1fr;
+
+                height: auto;
+            }
+
+            .conversation-list {
+                max-height: 300px;
+
+                border-right: none;
+
+                border-bottom: 1px solid #29293a;
+            }
+
+            .chat {
+                height: 600px;
+            }
+
+            .topbar {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- ==================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎧 <span>SUPPORT</span>AI
+        </div>
+
+
+        <a href="dashboard.html"
+           class="nav-link">
+
+            🎧 Dashboard
+
+        </a>
+
+
+        <a href="tickets.html"
+           class="nav-link">
+
+            🎫 Support Tickets
+
+        </a>
+
+
+        <a href="conversations.html"
+           class="nav-link active">
+
+            💬 Conversations
+
+        </a>
+
+
+        <a href="activity.html"
+           class="nav-link">
+
+            📊 Activity
+
+        </a>
+
+
+        <a href="../index.html"
+           class="nav-link">
+
+            🏠 Home
+
+        </a>
+
+    </aside>
+
+
+    <!-- ==================================================
+         MAIN
+    ================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Conversations
+                </h1>
+
+                <p>
+                    Communicate with customers and resolve their issues.
+                </p>
+
+            </div>
+
+
+            <button
+                class="btn"
+                onclick="openNewConversation()">
+
+                + New Conversation
+
+            </button>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <input
+            type="text"
+            id="searchInput"
+            class="search"
+            placeholder="Search conversations or customers..."
+            onkeyup="searchConversations()"
+        >
+
+
+        <!-- ==================================================
+             CONVERSATION LAYOUT
+        ================================================== -->
+
+        <div class="conversation-layout">
+
+
+            <!-- ==================================================
+                 CONVERSATION LIST
+            ================================================== -->
+
+            <div class="conversation-list"
+                 id="conversationList">
+
+
+                <div class="list-header">
+
+                    <h3>
+                        Conversations
+                    </h3>
+
+                    <span id="conversationCount">
+                        4
+                    </span>
+
+                </div>
+
+
+                <!-- CONVERSATION 1 -->
+
+                <div
+                    class="conversation-item active"
+                    data-name="rahul kumar"
+                    onclick="selectConversation(
+                        'Rahul Kumar',
+                        'Unable to reset password',
+                        'I cannot access my account because I forgot my password.',
+                        '2 minutes ago'
+                    )">
+
+                    <div class="customer-row">
+
+                        <span class="customer-name">
+
+                            <span class="status-dot"></span>
+
+                            Rahul Kumar
+
+                        </span>
+
+                        <span class="time">
+                            2m
+                        </span>
+
+                    </div>
+
+                    <div class="message-preview">
+
+                        I cannot access my account...
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONVERSATION 2 -->
+
+                <div
+                    class="conversation-item"
+                    data-name="priya sharma"
+                    onclick="selectConversation(
+                        'Priya Sharma',
+                        'Payment issue',
+                        'Payment was deducted twice from my account.',
+                        '8 minutes ago'
+                    )">
+
+                    <div class="customer-row">
+
+                        <span class="customer-name">
+
+                            <span class="status-dot"></span>
+
+                            Priya Sharma
+
+                        </span>
+
+                        <span class="time">
+                            8m
+                        </span>
+
+                    </div>
+
+                    <div class="message-preview">
+
+                        Payment was deducted twice...
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONVERSATION 3 -->
+
+                <div
+                    class="conversation-item"
+                    data-name="arjun reddy"
+                    onclick="selectConversation(
+                        'Arjun Reddy',
+                        'Mobile application problem',
+                        'The mobile application crashes when I try to open it.',
+                        '15 minutes ago'
+                    )">
+
+                    <div class="customer-row">
+
+                        <span class="customer-name">
+
+                            <span class="status-dot"></span>
+
+                            Arjun Reddy
+
+                        </span>
+
+                        <span class="time">
+                            15m
+                        </span>
+
+                    </div>
+
+                    <div class="message-preview">
+
+                        The mobile application crashes...
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONVERSATION 4 -->
+
+                <div
+                    class="conversation-item"
+                    data-name="sneha patel"
+                    onclick="selectConversation(
+                        'Sneha Patel',
+                        'Email notification problem',
+                        'I am not receiving email notifications.',
+                        '22 minutes ago'
+                    )">
+
+                    <div class="customer-row">
+
+                        <span class="customer-name">
+
+                            <span class="status-dot"></span>
+
+                            Sneha Patel
+
+                        </span>
+
+                        <span class="time">
+                            22m
+                        </span>
+
+                    </div>
+
+                    <div class="message-preview">
+
+                        I am not receiving email alerts...
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==================================================
+                 CHAT
+            ================================================== -->
+
+            <div class="chat">
+
+
+                <!-- CHAT HEADER -->
+
+                <div class="chat-header">
+
+                    <div class="customer-info">
+
+                        <h3 id="customerName">
+                            Rahul Kumar
+                        </h3>
+
+                        <p id="conversationTopic">
+                            Unable to reset password
+                        </p>
+
+                    </div>
+
+
+                    <div class="chat-actions">
+
+                        <button
+                            class="small-btn"
+                            onclick="closeConversation()">
+
+                            Close
+
+                        </button>
+
+                        <button
+                            class="small-btn"
+                            onclick="deleteConversation()">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     MESSAGES
+                ================================================== -->
+
+                <div
+                    class="messages"
+                    id="messages">
+
+
+                    <div class="message customer">
+
+                        <div class="message-name">
+                            Rahul Kumar
+                        </div>
+
+                        I cannot access my account because I forgot my password.
+
+                        <div class="message-time">
+                            2 minutes ago
+                        </div>
+
+                    </div>
+
+
+                    <div class="message agent">
+
+                        <div class="message-name">
+                            SupportAI
+                        </div>
+
+                        Hello Rahul. I can help you reset your password. Please use the "Forgot Password" option on the login page.
+
+                        <div class="message-time">
+                            1 minute ago
+                        </div>
+
+                    </div>
+
+
+                    <div class="message customer">
+
+                        <div class="message-name">
+                            Rahul Kumar
+                        </div>
+
+                        I tried that, but I did not receive the reset email.
+
+                        <div class="message-time">
+                            30 seconds ago
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ==================================================
+                     REPLY
+                ================================================== -->
+
+                <div class="reply-area">
+
+                    <input
+                        type="text"
+                        id="replyInput"
+                        class="reply-input"
+                        placeholder="Type your reply..."
+                        onkeydown="handleEnter(event)"
+                    >
+
+
+                    <button
+                        class="send-btn"
+                        onclick="sendMessage()">
+
+                        Send
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- ==================================================
+     NEW CONVERSATION MODAL
+================================================== -->
+
+<div
+    class="modal"
+    id="newConversationModal">
+
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <h2>
+                New Conversation
+            </h2>
+
+            <span
+                class="close"
+                onclick="closeNewConversation()">
+
+                &times;
+
+            </span>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Customer Name
+            </label>
+
+            <input
+                type="text"
+                id="newCustomer"
+                placeholder="Enter customer name"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Topic
+            </label>
+
+            <input
+                type="text"
+                id="newTopic"
+                placeholder="Enter conversation topic"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                First Message
+            </label>
+
+            <textarea
+                id="newMessage"
+                placeholder="Enter customer's message"
+            ></textarea>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="cancel-btn"
+                onclick="closeNewConversation()">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                class="btn"
+                onclick="createConversation()">
+
+                Create
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+    /* ==================================================
+       SELECT CONVERSATION
+    ================================================== */
+
+    function selectConversation(
+        customer,
+        topic,
+        firstMessage,
+        time
+    ) {
+
+
+        document
+            .getElementById("customerName")
+            .textContent = customer;
+
+
+        document
+            .getElementById("conversationTopic")
+            .textContent = topic;
+
+
+        const messages =
+            document.getElementById("messages");
+
+
+        messages.innerHTML = `
+
+            <div class="message customer">
+
+                <div class="message-name">
+                    ${customer}
+                </div>
+
+                ${firstMessage}
+
+                <div class="message-time">
+                    ${time}
+                </div>
+
+            </div>
+
+
+            <div class="message agent">
+
+                <div class="message-name">
+                    SupportAI
+                </div>
+
+                Hello ${customer.split(" ")[0]}. Thank you for contacting support. I will help you with this issue.
+
+                <div class="message-time">
+                    Just now
+                </div>
+
+            </div>
+
+        `;
+
+
+        document
+            .querySelectorAll(".conversation-item")
+            .forEach(function(item) {
+
+                item.classList.remove("active");
+
+            });
+
+
+        event.currentTarget.classList.add("active");
+
+    }
+
+
+    /* ==================================================
+       SEND MESSAGE
+    ================================================== */
+
+    function sendMessage() {
+
+
+        const input =
+            document.getElementById("replyInput");
+
+
+        const message =
+            input.value.trim();
+
+
+        if (message === "") {
+
+            alert("Please type a message.");
+
+            return;
+
+        }
+
+
+        const messages =
+            document.getElementById("messages");
+
+
+        const newMessage =
+            document.createElement("div");
+
+
+        newMessage.className =
+            "message agent";
+
+
+        newMessage.innerHTML = `
+
+            <div class="message-name">
+                SupportAI
+            </div>
+
+            ${message}
+
+            <div class="message-time">
+                Just now
+            </div>
+
+        `;
+
+
+        messages.appendChild(newMessage);
+
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+
+        input.value = "";
+
+    }
+
+
+    /* ==================================================
+       ENTER KEY
+    ================================================== */
+
+    function handleEnter(event) {
+
+        if (event.key === "Enter") {
+
+            sendMessage();
+
+        }
+
+    }
+
+
+    /* ==================================================
+       SEARCH
+    ================================================== */
+
+    function searchConversations() {
+
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const conversations =
+            document.querySelectorAll(
+                ".conversation-item"
+            );
+
+
+        let count = 0;
+
+
+        conversations.forEach(function(item) {
+
+
+            const name =
+                item
+                    .getAttribute("data-name")
+                    .toLowerCase();
+
+
+            const text =
+                item
+                    .textContent
+                    .toLowerCase();
+
+
+            if (
+                name.includes(search) ||
+                text.includes(search)
+            ) {
+
+                item.style.display = "block";
+
+                count++;
+
+            }
+
+            else {
+
+                item.style.display = "none";
+
+            }
+
+        });
+
+
+        document
+            .getElementById("conversationCount")
+            .textContent = count;
+
+    }
+
+
+    /* ==================================================
+       CLOSE CONVERSATION
+    ================================================== */
+
+    function closeConversation() {
+
+        alert(
+            "This conversation has been marked as closed."
+        );
+
+    }
+
+
+    /* ==================================================
+       DELETE CONVERSATION
+    ================================================== */
+
+    function deleteConversation() {
+
+
+        const confirmDelete =
+            confirm(
+                "Are you sure you want to delete this conversation?"
+            );
+
+
+        if (confirmDelete) {
+
+            alert(
+                "Conversation deleted successfully."
+            );
+
+        }
+
+    }
+
+
+    /* ==================================================
+       NEW CONVERSATION MODAL
+    ================================================== */
+
+    function openNewConversation() {
+
+        document
+            .getElementById("newConversationModal")
+            .style.display = "flex";
+
+    }
+
+
+    function closeNewConversation() {
+
+        document
+            .getElementById("newConversationModal")
+            .style.display = "none";
+
+    }
+
+
+    /* ==================================================
+       CREATE CONVERSATION
+    ================================================== */
+
+    function createConversation() {
+
+
+        const customer =
+            document
+                .getElementById("newCustomer")
+                .value
+                .trim();
+
+
+        const topic =
+            document
+                .getElementById("newTopic")
+                .value
+                .trim();
+
+
+        const message =
+            document
+                .getElementById("newMessage")
+                .value
+                .trim();
+
+
+        if (
+            customer === "" ||
+            topic === "" ||
+            message === ""
+        ) {
+
+            alert(
+                "Please fill in all fields."
+            );
+
+            return;
+
+        }
+
+
+        const list =
+            document.getElementById(
+                "conversationList"
+            );
+
+
+        const item =
+            document.createElement("div");
+
+
+        item.className =
+            "conversation-item";
+
+
+        item.setAttribute(
+            "data-name",
+            customer.toLowerCase()
+        );
+
+
+        item.innerHTML = `
+
+            <div class="customer-row">
+
+                <span class="customer-name">
+
+                    <span class="status-dot"></span>
+
+                    ${customer}
+
+                </span>
+
+                <span class="time">
+                    Just now
+                </span>
+
+            </div>
+
+
+            <div class="message-preview">
+
+                ${message}
+
+            </div>
+
+        `;
+
+
+        item.onclick = function() {
+
+            selectConversation(
+                customer,
+                topic,
+                message,
+                "Just now"
+            );
+
+        };
+
+
+        list.appendChild(item);
+
+
+        closeNewConversation();
+
+
+        document
+            .getElementById("newCustomer")
+            .value = "";
+
+
+        document
+            .getElementById("newTopic")
+            .value = "";
+
+
+        document
+            .getElementById("newMessage")
+            .value = "";
+
+
+        searchConversations();
+
+    }
+
+
+    /* ==================================================
+       CLOSE MODAL WHEN CLICKING OUTSIDE
+    ================================================== */
+
+    window.onclick = function(event) {
+
+        const modal =
+            document.getElementById(
+                "newConversationModal"
+            );
+
+
+        if (event.target === modal) {
+
+            closeNewConversation();
+
+        }
+
+    };
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Study Agent - Tasks</title>
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+        /* =====================================
+           STUDY TASKS PAGE
+        ===================================== */
+
+        .tasks-layout {
+            min-height: 100vh;
+            display: flex;
+            background: #0b0b12;
+        }
+
+
+        /* =====================================
+           SIDEBAR
+        ===================================== */
+
+        .tasks-sidebar {
+            width: 250px;
+            min-height: 100vh;
+
+            padding: 25px 18px;
+
+            background: #10101a;
+
+            border-right: 1px solid #29293a;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+        }
+
+
+        .tasks-logo {
+            padding: 10px;
+
+            margin-bottom: 35px;
+
+            font-size: 20px;
+
+            font-weight: bold;
+        }
+
+
+        .tasks-logo span {
+            color: #8b5cf6;
+        }
+
+
+        .tasks-nav {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+
+        .tasks-nav a {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 13px 15px;
+
+            color: #9292a3;
+
+            text-decoration: none;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            transition: 0.3s;
+        }
+
+
+        .tasks-nav a:hover,
+        .tasks-nav a.active {
+            background: #211b34;
+
+            color: #ffffff;
+        }
+
+
+        /* =====================================
+           MAIN CONTENT
+        ===================================== */
+
+        .tasks-main {
+            width: calc(100% - 250px);
+
+            margin-left: 250px;
+
+            padding: 35px 40px;
+        }
+
+
+        /* =====================================
+           TOP HEADER
+        ===================================== */
+
+        .tasks-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .tasks-header h1 {
+            font-size: 30px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .tasks-header p {
+            color: #9292a3;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================
+           ADD TASK BUTTON
+        ===================================== */
+
+        .add-task-btn {
+            padding: 12px 20px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #8b5cf6;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+
+        .add-task-btn:hover {
+            background: #7c3aed;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =====================================
+           TASK STATISTICS
+        ===================================== */
+
+        .task-stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .task-stat {
+            padding: 20px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 14px;
+        }
+
+
+        .task-stat p {
+            color: #9292a3;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .task-stat h2 {
+            font-size: 28px;
+        }
+
+
+        .task-stat.completed h2 {
+            color: #4ade80;
+        }
+
+
+        .task-stat.pending h2 {
+            color: #fbbf24;
+        }
+
+
+        .task-stat.overdue h2 {
+            color: #f87171;
+        }
+
+
+        /* =====================================
+           FILTER BAR
+        ===================================== */
+
+        .task-toolbar {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .filter-buttons {
+            display: flex;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .filter-btn {
+            padding: 8px 15px;
+
+            border: 1px solid #29293a;
+
+            border-radius: 20px;
+
+            background: #14141f;
+
+            color: #9292a3;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #211b34;
+
+            border-color: #8b5cf6;
+
+            color: #ffffff;
+        }
+
+
+        .search-box {
+            padding: 10px 14px;
+
+            width: 230px;
+
+            border: 1px solid #29293a;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            background: #14141f;
+
+            color: white;
+        }
+
+
+        .search-box:focus {
+            border-color: #8b5cf6;
+        }
+
+
+        /* =====================================
+           TASK CONTAINER
+        ===================================== */
+
+        .tasks-container {
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+        }
+
+
+        .tasks-title {
+            padding: 22px 25px;
+
+            border-bottom: 1px solid #29293a;
+        }
+
+
+        .tasks-title h2 {
+            font-size: 18px;
+        }
+
+
+        /* =====================================
+           TASK ROW
+        ===================================== */
+
+        .task-row {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 18px 25px;
+
+            border-bottom: 1px solid #29293a;
+
+            transition: 0.3s;
+        }
+
+
+        .task-row:last-child {
+            border-bottom: none;
+        }
+
+
+        .task-row:hover {
+            background: #181824;
+        }
+
+
+        .task-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+
+        /* =====================================
+           CHECKBOX
+        ===================================== */
+
+        .task-check {
+            width: 20px;
+            height: 20px;
+
+            accent-color: #8b5cf6;
+
+            cursor: pointer;
+        }
+
+
+        .task-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #211b34;
+
+            border-radius: 10px;
+
+            font-size: 19px;
+        }
+
+
+        .task-details h3 {
+            font-size: 14px;
+
+            margin-bottom: 4px;
+        }
+
+
+        .task-details p {
+            color: #777788;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================
+           PRIORITY
+        ===================================== */
+
+        .priority {
+            padding: 5px 10px;
+
+            border-radius: 15px;
+
+            font-size: 10px;
+
+            font-weight: bold;
+        }
+
+
+        .priority.high {
+            background: #351b1b;
+
+            color: #f87171;
+        }
+
+
+        .priority.medium {
+            background: #302713;
+
+            color: #fbbf24;
+        }
+
+
+        .priority.low {
+            background: #102019;
+
+            color: #4ade80;
+        }
+
+
+        /* =====================================
+           DELETE BUTTON
+        ===================================== */
+
+        .delete-btn {
+            padding: 7px 10px;
+
+            border: 1px solid #3a2929;
+
+            border-radius: 7px;
+
+            background: transparent;
+
+            color: #f87171;
+
+            cursor: pointer;
+        }
+
+
+        .delete-btn:hover {
+            background: #351b1b;
+        }
+
+
+        /* =====================================
+           ADD TASK MODAL
+        ===================================== */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 2000;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: rgba(0, 0, 0, 0.7);
+
+            padding: 20px;
+        }
+
+
+        .modal.show {
+            display: flex;
+        }
+
+
+        .modal-box {
+            width: 100%;
+
+            max-width: 450px;
+
+            padding: 30px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 16px;
+        }
+
+
+        .modal-box h2 {
+            margin-bottom: 20px;
+        }
+
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #a5a5b5;
+
+            font-size: 13px;
+        }
+
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+
+            padding: 11px;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            background: #0e0e17;
+
+            color: white;
+
+            outline: none;
+        }
+
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #8b5cf6;
+        }
+
+
+        .modal-buttons {
+            display: flex;
+
+            gap: 10px;
+
+            justify-content: flex-end;
+
+            margin-top: 20px;
+        }
+
+
+        .cancel-btn {
+            padding: 10px 18px;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            background: transparent;
+
+            color: #aaaabb;
+
+            cursor: pointer;
+        }
+
+
+        .save-btn {
+            padding: 10px 18px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #8b5cf6;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================
+           RESPONSIVE
+        ===================================== */
+
+        @media (max-width: 1000px) {
+
+            .task-stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 750px) {
+
+            .tasks-sidebar {
+                width: 70px;
+
+                padding: 20px 8px;
+            }
+
+
+            .tasks-logo {
+                text-align: center;
+
+                font-size: 16px;
+            }
+
+
+            .tasks-logo .logo-text {
+                display: none;
+            }
+
+
+            .tasks-nav a {
+                justify-content: center;
+
+                font-size: 0;
+            }
+
+
+            .tasks-nav a span {
+                font-size: 20px;
+            }
+
+
+            .tasks-main {
+                width: calc(100% - 70px);
+
+                margin-left: 70px;
+
+                padding: 25px 15px;
+            }
+
+
+            .tasks-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+
+            .task-stats {
+                grid-template-columns: 1fr;
+            }
+
+
+            .task-toolbar {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .search-box {
+                width: 100%;
+            }
+
+
+            .task-row {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="tasks-layout">
+
+
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
+
+    <aside class="tasks-sidebar">
+
+
+        <div class="tasks-logo">
+
+            <span>AI</span>
+
+            <span class="logo-text">
+                Study Agent
+            </span>
+
+        </div>
+
+
+        <nav class="tasks-nav">
+
+
+            <a href="dashboard.html">
+
+                <span>📊</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="tasks.html" class="active">
+
+                <span>✓</span>
+
+                Tasks
+
+            </a>
+
+
+            <a href="analytics.html">
+
+                <span>📈</span>
+
+                Analytics
+
+            </a>
+
+
+            <a href="../index.html">
+
+                <span>⌂</span>
+
+                Home
+
+            </a>
+
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
+
+    <main class="tasks-main">
+
+
+        <!-- HEADER -->
+
+        <header class="tasks-header">
+
+            <div>
+
+                <h1>
+                    Study Tasks
+                </h1>
+
+                <p>
+                    Manage and organize your learning activities.
+                </p>
+
+            </div>
+
+
+            <button
+                class="add-task-btn"
+                onclick="openTaskModal()">
+
+                + Add Task
+
+            </button>
+
+        </header>
+
+
+
+        <!-- =====================================
+             TASK STATISTICS
+        ====================================== -->
+
+        <section class="task-stats">
+
+
+            <div class="task-stat">
+
+                <p>
+                    Total Tasks
+                </p>
+
+                <h2 id="totalTasks">
+                    6
+                </h2>
+
+            </div>
+
+
+            <div class="task-stat completed">
+
+                <p>
+                    Completed
+                </p>
+
+                <h2 id="completedTasks">
+                    2
+                </h2>
+
+            </div>
+
+
+            <div class="task-stat pending">
+
+                <p>
+                    Pending
+                </p>
+
+                <h2 id="pendingTasks">
+                    4
+                </h2>
+
+            </div>
+
+
+            <div class="task-stat overdue">
+
+                <p>
+                    Overdue
+                </p>
+
+                <h2>
+                    1
+                </h2>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================
+             TOOLBAR
+        ====================================== -->
+
+        <div class="task-toolbar">
+
+
+            <div class="filter-buttons">
+
+
+                <button
+                    class="filter-btn active"
+                    onclick="filterTasks('all', this)">
+
+                    All
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    onclick="filterTasks('pending', this)">
+
+                    Pending
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    onclick="filterTasks('completed', this)">
+
+                    Completed
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    onclick="filterTasks('high', this)">
+
+                    High Priority
+
+                </button>
+
+
+            </div>
+
+
+            <input
+                type="text"
+                class="search-box"
+                id="taskSearch"
+                placeholder="Search tasks..."
+                onkeyup="searchTasks()">
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             TASK LIST
+        ====================================== -->
+
+        <section class="tasks-container">
+
+
+            <div class="tasks-title">
+
+                <h2>
+                    My Study Tasks
+                </h2>
+
+            </div>
+
+
+
+            <!-- TASK 1 -->
+
+            <div
+                class="task-row"
+                data-status="pending"
+                data-priority="high">
+
+
+                <div class="task-left">
+
+                    <input
+                        type="checkbox"
+                        class="task-check"
+                        onchange="updateTaskStatus(this)">
+
+
+                    <div class="task-icon">
+                        📚
+                    </div>
+
+
+                    <div class="task-details">
+
+                        <h3>
+                            Revise DSA Concepts
+                        </h3>
+
+                        <p>
+                            Today • 45 minutes
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <span class="priority high">
+                    HIGH
+                </span>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteTask(this)">
+
+                    Delete
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- TASK 2 -->
+
+            <div
+                class="task-row"
+                data-status="pending"
+                data-priority="medium">
+
+
+                <div class="task-left">
+
+                    <input
+                        type="checkbox"
+                        class="task-check"
+                        onchange="updateTaskStatus(this)">
+
+
+                    <div class="task-icon">
+                        💻
+                    </div>
+
+
+                    <div class="task-details">
+
+                        <h3>
+                            Complete Python Assignment
+                        </h3>
+
+                        <p>
+                            Today • 1 hour
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <span class="priority medium">
+                    MEDIUM
+                </span>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteTask(this)">
+
+                    Delete
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- TASK 3 -->
+
+            <div
+                class="task-row"
+                data-status="completed"
+                data-priority="low">
+
+
+                <div class="task-left">
+
+                    <input
+                        type="checkbox"
+                        class="task-check"
+                        checked
+                        onchange="updateTaskStatus(this)">
+
+
+                    <div class="task-icon">
+                        🗄️
+                    </div>
+
+
+                    <div class="task-details">
+
+                        <h3>
+                            Practice SQL Queries
+                        </h3>
+
+                        <p>
+                            Completed • 30 minutes
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <span class="priority low">
+                    LOW
+                </span>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteTask(this)">
+
+                    Delete
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- TASK 4 -->
+
+            <div
+                class="task-row"
+                data-status="pending"
+                data-priority="high">
+
+
+                <div class="task-left">
+
+                    <input
+                        type="checkbox"
+                        class="task-check"
+                        onchange="updateTaskStatus(this)">
+
+
+                    <div class="task-icon">
+                        🌐
+                    </div>
+
+
+                    <div class="task-details">
+
+                        <h3>
+                            Complete JavaScript Practice
+                        </h3>
+
+                        <p>
+                            Tomorrow • 1 hour
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <span class="priority high">
+                    HIGH
+                </span>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteTask(this)">
+
+                    Delete
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- TASK 5 -->
+
+            <div
+                class="task-row"
+                data-status="pending"
+                data-priority="medium">
+
+
+                <div class="task-left">
+
+                    <input
+                        type="checkbox"
+                        class="task-check"
+                        onchange="updateTaskStatus(this)">
+
+
+                    <div class="task-icon">
+                        🧮
+                    </div>
+
+
+                    <div class="task-details">
+
+                        <h3>
+                            Practice Linear Algebra
+                        </h3>
+
+                        <p>
+                            Tomorrow • 45 minutes
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <span class="priority medium">
+                    MEDIUM
+                </span>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteTask(this)">
+
+                    Delete
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- TASK 6 -->
+
+            <div
+                class="task-row"
+                data-status="completed"
+                data-priority="low">
+
+
+                <div class="task-left">
+
+                    <input
+                        type="checkbox"
+                        class="task-check"
+                        checked
+                        onchange="updateTaskStatus(this)">
+
+
+                    <div class="task-icon">
+                        🎨
+                    </div>
+
+
+                    <div class="task-details">
+
+                        <h3>
+                            Review CSS Practical Programs
+                        </h3>
+
+                        <p>
+                            Completed • 40 minutes
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <span class="priority low">
+                    LOW
+                </span>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteTask(this)">
+
+                    Delete
+
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================
+     ADD TASK MODAL
+====================================== -->
+
+<div
+    class="modal"
+    id="taskModal">
+
+
+    <div class="modal-box">
+
+
+        <h2>
+            Add New Study Task
+        </h2>
+
+
+        <div class="form-group">
+
+            <label>
+                Task Name
+            </label>
+
+            <input
+                type="text"
+                id="newTaskName"
+                placeholder="Enter task name">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Subject
+            </label>
+
+            <input
+                type="text"
+                id="newTaskSubject"
+                placeholder="Example: Python">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Priority
+            </label>
+
+            <select id="newTaskPriority">
+
+                <option value="high">
+                    High
+                </option>
+
+                <option value="medium" selected>
+                    Medium
+                </option>
+
+                <option value="low">
+                    Low
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="cancel-btn"
+                onclick="closeTaskModal()">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                class="save-btn"
+                onclick="addTask()">
+
+                Add Task
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    /* =====================================
+       OPEN MODAL
+    ===================================== */
+
+    function openTaskModal() {
+
+        document
+            .getElementById("taskModal")
+            .classList.add("show");
+
+    }
+
+
+    /* =====================================
+       CLOSE MODAL
+    ===================================== */
+
+    function closeTaskModal() {
+
+        document
+            .getElementById("taskModal")
+            .classList.remove("show");
+
+    }
+
+
+    /* =====================================
+       ADD TASK
+    ===================================== */
+
+    function addTask() {
+
+        const name =
+            document.getElementById("newTaskName").value.trim();
+
+        const subject =
+            document.getElementById("newTaskSubject").value.trim();
+
+        const priority =
+            document.getElementById("newTaskPriority").value;
+
+
+        if (name === "") {
+
+            alert("Please enter a task name.");
+
+            return;
+
+        }
+
+
+        const taskContainer =
+            document.querySelector(".tasks-container");
+
+
+        const taskRow =
+            document.createElement("div");
+
+
+        taskRow.className = "task-row";
+
+        taskRow.setAttribute("data-status", "pending");
+
+        taskRow.setAttribute("data-priority", priority);
+
+
+        let icon = "📚";
+
+
+        if (subject.toLowerCase().includes("python")) {
+
+            icon = "💻";
+
+        }
+        else if (subject.toLowerCase().includes("sql")) {
+
+            icon = "🗄️";
+
+        }
+        else if (subject.toLowerCase().includes("web")) {
+
+            icon = "🌐";
+
+        }
+
+
+        taskRow.innerHTML = `
+
+            <div class="task-left">
+
+                <input
+                    type="checkbox"
+                    class="task-check"
+                    onchange="updateTaskStatus(this)">
+
+                <div class="task-icon">
+                    ${icon}
+                </div>
+
+                <div class="task-details">
+
+                    <h3>
+                        ${name}
+                    </h3>
+
+                    <p>
+                        ${subject || "Study Task"} • New
+                    </p>
+
+                </div>
+
+            </div>
+
+            <span class="priority ${priority}">
+                ${priority.toUpperCase()}
+            </span>
+
+            <button
+                class="delete-btn"
+                onclick="deleteTask(this)">
+
+                Delete
+
+            </button>
+
+        `;
+
+
+        taskContainer.appendChild(taskRow);
+
+
+        document.getElementById("newTaskName").value = "";
+
+        document.getElementById("newTaskSubject").value = "";
+
+
+        closeTaskModal();
+
+        updateStatistics();
+
+    }
+
+
+    /* =====================================
+       DELETE TASK
+    ===================================== */
+
+    function deleteTask(button) {
+
+        const task =
+            button.closest(".task-row");
+
+
+        if (confirm("Delete this task?")) {
+
+            task.remove();
+
+            updateStatistics();
+
+        }
+
+    }
+
+
+    /* =====================================
+       COMPLETE TASK
+    ===================================== */
+
+    function updateTaskStatus(checkbox) {
+
+        const task =
+            checkbox.closest(".task-row");
+
+
+        if (checkbox.checked) {
+
+            task.setAttribute(
+                "data-status",
+                "completed"
+            );
+
+        }
+        else {
+
+            task.setAttribute(
+                "data-status",
+                "pending"
+            );
+
+        }
+
+
+        updateStatistics();
+
+    }
+
+
+    /* =====================================
+       FILTER TASKS
+    ===================================== */
+
+    function filterTasks(type, button) {
+
+        const buttons =
+            document.querySelectorAll(".filter-btn");
+
+
+        buttons.forEach(function(btn) {
+
+            btn.classList.remove("active");
+
+        });
+
+
+        button.classList.add("active");
+
+
+        const tasks =
+            document.querySelectorAll(".task-row");
+
+
+        tasks.forEach(function(task) {
+
+            const status =
+                task.getAttribute("data-status");
+
+            const priority =
+                task.getAttribute("data-priority");
+
+
+            if (type === "all") {
+
+                task.style.display = "flex";
+
+            }
+
+            else if (type === "pending") {
+
+                task.style.display =
+                    status === "pending"
+                    ? "flex"
+                    : "none";
+
+            }
+
+            else if (type === "completed") {
+
+                task.style.display =
+                    status === "completed"
+                    ? "flex"
+                    : "none";
+
+            }
+
+            else if (type === "high") {
+
+                task.style.display =
+                    priority === "high"
+                    ? "flex"
+                    : "none";
+
+            }
+
+        });
+
+    }
+
+
+    /* =====================================
+       SEARCH TASKS
+    ===================================== */
+
+    function searchTasks() {
+
+        const search =
+            document
+                .getElementById("taskSearch")
+                .value
+                .toLowerCase();
+
+
+        const tasks =
+            document.querySelectorAll(".task-row");
+
+
+        tasks.forEach(function(task) {
+
+            const text =
+                task.innerText.toLowerCase();
+
+
+            if (text.includes(search)) {
+
+                task.style.display = "flex";
+
+            }
+            else {
+
+                task.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    /* =====================================
+       UPDATE STATISTICS
+    ===================================== */
+
+    function updateStatistics() {
+
+        const tasks =
+            document.querySelectorAll(".task-row");
+
+
+        let completed = 0;
+
+        let pending = 0;
+
+
+        tasks.forEach(function(task) {
+
+            if (
+                task.getAttribute("data-status")
+                === "completed"
+            ) {
+
+                completed++;
+
+            }
+            else {
+
+                pending++;
+
+            }
+
+        });
+
+
+        document.getElementById("totalTasks")
+            .textContent = tasks.length;
+
+
+        document.getElementById("completedTasks")
+            .textContent = completed;
+
+
+        document.getElementById("pendingTasks")
+            .textContent = pending;
+
+    }
+
+
+    /* =====================================
+       INITIALIZE
+    ===================================== */
+
+    updateStatistics();
+
+</script>
+
+
+</body>
+
+</html>

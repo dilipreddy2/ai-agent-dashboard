@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Activity | SupportAI</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b12;
+            color: white;
+        }
+
+        /* ================= LAYOUT ================= */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            width: 250px;
+            background: #10101a;
+            border-right: 1px solid #29293a;
+            padding: 25px 15px;
+
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f97316;
+            padding: 10px 15px 30px;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 14px 15px;
+            margin-bottom: 8px;
+
+            text-decoration: none;
+            color: #aaa;
+
+            border-radius: 8px;
+
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            background: #382113;
+            color: #fb923c;
+        }
+
+        .nav-link.active {
+            background: #382113;
+            color: #f97316;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .topbar p {
+            margin-top: 8px;
+            color: #999;
+        }
+
+        .btn {
+            background: #f97316;
+            color: white;
+
+            border: none;
+            border-radius: 8px;
+
+            padding: 12px 18px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #fb923c;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 12px;
+
+            padding: 22px;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+
+            color: #999;
+
+            font-size: 14px;
+        }
+
+        .number {
+            margin-top: 10px;
+
+            font-size: 30px;
+
+            font-weight: bold;
+        }
+
+        .orange {
+            color: #f97316;
+        }
+
+        .blue {
+            color: #38bdf8;
+        }
+
+        .green {
+            color: #22c55e;
+        }
+
+        .yellow {
+            color: #facc15;
+        }
+
+        /* ================= CONTROLS ================= */
+
+        .controls {
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 20px;
+        }
+
+        .search {
+            flex: 1;
+
+            min-width: 250px;
+
+            padding: 13px 15px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            color: white;
+
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: #f97316;
+        }
+
+        .filter-btn {
+            padding: 12px 15px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            color: #aaa;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #382113;
+
+            color: #f97316;
+
+            border-color: #f97316;
+        }
+
+        /* ================= ACTIVITY PANEL ================= */
+
+        .activity-panel {
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px;
+
+            border-bottom: 1px solid #29293a;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+        }
+
+        .activity-count {
+            color: #888;
+
+            font-size: 13px;
+        }
+
+        /* ================= ACTIVITY ITEM ================= */
+
+        .activity-item {
+            display: flex;
+
+            gap: 18px;
+
+            padding: 20px;
+
+            border-bottom: 1px solid #29293a;
+
+            transition: 0.2s;
+        }
+
+        .activity-item:hover {
+            background: #191923;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 45px;
+            height: 45px;
+
+            min-width: 45px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            border-radius: 50%;
+
+            background: #382113;
+
+            color: #f97316;
+
+            font-size: 20px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: bold;
+
+            margin-bottom: 6px;
+        }
+
+        .activity-description {
+            color: #999;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .activity-time {
+            margin-top: 8px;
+
+            color: #666;
+
+            font-size: 12px;
+        }
+
+        .activity-type {
+            padding: 5px 9px;
+
+            border-radius: 15px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            height: fit-content;
+        }
+
+        .type-ticket {
+            background: #102f3b;
+
+            color: #38bdf8;
+        }
+
+        .type-resolved {
+            background: #12351f;
+
+            color: #22c55e;
+        }
+
+        .type-message {
+            background: #382a13;
+
+            color: #facc15;
+        }
+
+        .type-system {
+            background: #382113;
+
+            color: #f97316;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            padding: 60px;
+
+            text-align: center;
+
+            color: #777;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+
+            margin-bottom: 15px;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 1000;
+
+            background: rgba(0, 0, 0, 0.75);
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .modal-box {
+            width: 100%;
+
+            max-width: 500px;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 14px;
+
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            font-size: 25px;
+
+            color: #aaa;
+
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .detail-row {
+            padding: 14px 0;
+
+            border-bottom: 1px solid #29293a;
+        }
+
+        .detail-label {
+            color: #888;
+
+            font-size: 12px;
+
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            color: white;
+
+            line-height: 1.5;
+        }
+
+        .modal-footer {
+            display: flex;
+
+            justify-content: flex-end;
+
+            margin-top: 20px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+
+                width: calc(100% - 200px);
+
+                padding: 25px;
+            }
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+
+                width: 100%;
+
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .activity-item {
+                flex-wrap: wrap;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- ==================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎧 <span>SUPPORT</span>AI
+        </div>
+
+
+        <a href="dashboard.html"
+           class="nav-link">
+
+            🎧 Dashboard
+
+        </a>
+
+
+        <a href="tickets.html"
+           class="nav-link">
+
+            🎫 Support Tickets
+
+        </a>
+
+
+        <a href="conversations.html"
+           class="nav-link">
+
+            💬 Conversations
+
+        </a>
+
+
+        <a href="activity.html"
+           class="nav-link active">
+
+            📊 Activity
+
+        </a>
+
+
+        <a href="../index.html"
+           class="nav-link">
+
+            🏠 Home
+
+        </a>
+
+    </aside>
+
+
+    <!-- ==================================================
+         MAIN CONTENT
+    ================================================== -->
+
+    <main class="main">
+
+
+        <!-- ================= TOPBAR ================= -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Support Activity
+                </h1>
+
+                <p>
+                    Track recent support actions and customer interactions.
+                </p>
+
+            </div>
+
+
+            <button
+                class="btn"
+                onclick="clearActivity()">
+
+                Clear Activity
+
+            </button>
+
+        </div>
+
+
+        <!-- ================= STATS ================= -->
+
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Total Activities
+                </h3>
+
+                <div
+                    class="number orange"
+                    id="totalActivities">
+
+                    8
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Tickets Created
+                </h3>
+
+                <div
+                    class="number blue"
+                    id="ticketActivities">
+
+                    3
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Tickets Resolved
+                </h3>
+
+                <div
+                    class="number green"
+                    id="resolvedActivities">
+
+                    2
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Customer Replies
+                </h3>
+
+                <div
+                    class="number yellow"
+                    id="messageActivities">
+
+                    3
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ================= CONTROLS ================= -->
+
+        <div class="controls">
+
+
+            <input
+                type="text"
+                id="searchInput"
+                class="search"
+                placeholder="Search activity..."
+                onkeyup="filterActivities()"
+            >
+
+
+            <button
+                class="filter-btn active"
+                onclick="setFilter('all', this)">
+
+                All
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('ticket', this)">
+
+                Tickets
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('resolved', this)">
+
+                Resolved
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('message', this)">
+
+                Messages
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('system', this)">
+
+                System
+
+            </button>
+
+
+        </div>
+
+
+        <!-- ================= ACTIVITY LIST ================= -->
+
+        <section class="activity-panel">
+
+
+            <div class="panel-header">
+
+                <h2>
+                    Recent Activity
+                </h2>
+
+                <span
+                    class="activity-count"
+                    id="visibleCount">
+
+                    8 activities
+
+                </span>
+
+            </div>
+
+
+            <div id="activityList">
+
+
+                <!-- ACTIVITY 1 -->
+
+                <div
+                    class="activity-item"
+                    data-type="ticket"
+                    data-search="new support ticket rahul kumar password">
+
+                    <div class="activity-icon">
+                        🎫
+                    </div>
+
+
+                    <div class="activity-content">
+
+                        <div class="activity-title">
+                            New support ticket created
+                        </div>
+
+                        <div class="activity-description">
+                            Rahul Kumar created a ticket for a password reset problem.
+                        </div>
+
+                        <div class="activity-time">
+                            2 minutes ago
+                        </div>
+
+                    </div>
+
+
+                    <span class="activity-type type-ticket">
+                        TICKET
+                    </span>
+
+                </div>
+
+
+                <!-- ACTIVITY 2 -->
+
+                <div
+                    class="activity-item"
+                    data-type="message"
+                    data-search="rahul customer reply password reset">
+
+                    <div class="activity-icon">
+                        💬
+                    </div>
+
+
+                    <div class="activity-content">
+
+                        <div class="activity-title">
+                            Customer replied
+                        </div>
+
+                        <div class="activity-description">
+                            Rahul Kumar replied to the password reset conversation.
+                        </div>
+
+                        <div class="activity-time">
+                            3 minutes ago
+                        </div>
+
+                    </div>
+
+
+                    <span class="activity-type type-message">
+                        MESSAGE
+                    </span>
+
+                </div>
+
+
+                <!-- ACTIVITY 3 -->
+
+                <div
+                    class="activity-item"
+                    data-type="resolved"
+                    data-search="refund kiran rao resolved">
+
+                    <div class="activity-icon">
+                        ✓
+                    </div>
+
+
+                    <div class="activity-content">
+
+                        <div class="activity-title">
+                            Ticket resolved
+                        </div>
+
+                        <div class="activity-description">
+                            The refund request from Kiran Rao was successfully resolved.
+                        </div>
+
+                        <div class="activity-time">
+                            10 minutes ago
+                        </div>
+
+                    </div>
+
+
+                    <span class="activity-type type-resolved">
+                        RESOLVED
+                    </span>
+
+                </div>
+
+
+                <!-- ACTIVITY 4 -->
+
+                <div
+                    class="activity-item"
+                    data-type="ticket"
+                    data-search="payment priya sharma subscription">
+
+                    <div class="activity-icon">
+                        🎫
+                    </div>
+
+
+                    <div class="activity-content">
+
+                        <div class="activity-title">
+                            High priority ticket updated
+                        </div>
+
+                        <div class="activity-description">
+                            Priya Sharma's subscription payment issue was moved to In Progress.
+                        </div>
+
+                        <div class="activity-time">
+                            15 minutes ago
+                        </div>
+
+                    </div>
+
+
+                    <span class="activity-type type-ticket">
+                        TICKET
+                    </span>
+
+                </div>
+
+
+                <!-- ACTIVITY 5 -->
+
+                <div
+                    class="activity-item"
+                    data-type="message"
+                    data-search="priya payment customer message">
+
+                    <div class="activity-icon">
+                        💬
+                    </div>
+
+
+                    <div class="activity-content">
+
+                        <div class="activity-title">
+                            Customer message received
+                        </div>
+
+                        <div class="activity-description">
+                            Priya Sharma sent a message regarding a duplicate payment.
+                        </div>
+
+                        <div class="activity-time">
+                            18 minutes ago
+                        </div>
+
+                    </div>
+
+
+                    <span class="activity-type type-message">
+                        MESSAGE
+                    </span>
+
+                </div>
+
+
+                <!-- ACTIVITY 6 -->
+
+                <div
+                    class="activity-item"
+                    data-type="ticket"
+                    data-search="arjun mobile application loading">
+
+                    <div class="activity-icon">
+                        🎫
+                    </div>
+
+
+                    <div class="activity-content">
+
+                        <div class="activity-title">
+                            Support ticket created
+                        </div>
+
+                        <div class="activity-description">
+                            Arjun Reddy reported a problem with the mobile application.
+                        </div>
+
+                        <div class="activity-time">
+                            25 minutes ago
+                        </div>
+
+                    </div>
+
+
+                    <span class="activity-type type-ticket">
+                        TICKET
+                    </span>
+
+                </div>
+
+
+                <!-- ACTIVITY 7 -->
+
+                <div
+                    class="activity-item"
+                    data-type="resolved"
+                    data-search="email notification sneha resolved">
+
+                    <div class="activity-icon">
+                        ✓
+                    </div>
+
+
+                    <div class="activity-content">
+
+                        <div class="activity-title">
+                            Notification issue resolved
+                        </div>
+
+                        <div class="activity-description">
+                            Email notification settings were updated for Sneha Patel.
+                        </div>
+
+                        <div class="activity-time">
+                            30 minutes ago
+                        </div>
+
+                    </div>
+
+
+                    <span class="activity-type type-resolved">
+                        RESOLVED
+                    </span>
+
+                </div>
+
+
+                <!-- ACTIVITY 8 -->
+
+                <div
+                    class="activity-item"
+                    data-type="message"
+                    data-search="system support ai activity">
+
+                    <div class="activity-icon">
+                        🤖
+                    </div>
+
+
+                    <div class="activity-content">
+
+                        <div class="activity-title">
+                            SupportAI assistant activated
+                        </div>
+
+                        <div class="activity-description">
+                            AI support assistant is currently monitoring customer conversations.
+                        </div>
+
+                        <div class="activity-time">
+                            1 hour ago
+                        </div>
+
+                    </div>
+
+
+                    <span class="activity-type type-system">
+                        SYSTEM
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
+
+<script>
+
+
+    let currentFilter = "all";
+
+
+    /* ==================================================
+       FILTER ACTIVITIES
+    ================================================== */
+
+    function filterActivities() {
+
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const activities =
+            document.querySelectorAll(
+                ".activity-item"
+            );
+
+
+        let visible = 0;
+
+
+        activities.forEach(function(activity) {
+
+
+            const type =
+                activity.getAttribute(
+                    "data-type"
+                );
+
+
+            const text =
+                activity.getAttribute(
+                    "data-search"
+                );
+
+
+            const matchesSearch =
+                text.includes(search);
+
+
+            let matchesFilter = true;
+
+
+            if (
+                currentFilter !== "all"
+            ) {
+
+                matchesFilter =
+                    type === currentFilter;
+
+            }
+
+
+            if (
+                matchesSearch &&
+                matchesFilter
+            ) {
+
+                activity.style.display =
+                    "flex";
+
+                visible++;
+
+            }
+
+            else {
+
+                activity.style.display =
+                    "none";
+
+            }
+
+        });
+
+
+        document
+            .getElementById("visibleCount")
+            .textContent =
+            visible + " activities";
+
+    }
+
+
+    /* ==================================================
+       SET FILTER
+    ================================================== */
+
+    function setFilter(
+        filter,
+        button
+    ) {
+
+
+        currentFilter = filter;
+
+
+        document
+            .querySelectorAll(
+                ".filter-btn"
+            )
+            .forEach(function(btn) {
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+        button.classList.add(
+            "active"
+        );
+
+
+        filterActivities();
+
+    }
+
+
+    /* ==================================================
+       CLEAR ACTIVITY
+    ================================================== */
+
+    function clearActivity() {
+
+
+        const confirmation =
+            confirm(
+                "Are you sure you want to clear all activity?"
+            );
+
+
+        if (!confirmation) {
+            return;
+        }
+
+
+        const list =
+            document.getElementById(
+                "activityList"
+            );
+
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📭
+                </div>
+
+                <h3>
+                    No Activity
+                </h3>
+
+                <p>
+                    There is no recent support activity to display.
+                </p>
+
+            </div>
+
+        `;
+
+
+        document
+            .getElementById(
+                "visibleCount"
+            )
+            .textContent =
+            "0 activities";
+
+
+        document
+            .getElementById(
+                "totalActivities"
+            )
+            .textContent =
+            "0";
+
+
+        document
+            .getElementById(
+                "ticketActivities"
+            )
+            .textContent =
+            "0";
+
+
+        document
+            .getElementById(
+                "resolvedActivities"
+            )
+            .textContent =
+            "0";
+
+
+        document
+            .getElementById(
+                "messageActivities"
+            )
+            .textContent =
+            "0";
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
