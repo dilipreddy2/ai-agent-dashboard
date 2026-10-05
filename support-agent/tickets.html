@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Support Tickets | SupportAI</title>
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b12;
+            color: #ffffff;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            width: 250px;
+            background: #10101a;
+            border-right: 1px solid #29293a;
+            padding: 25px 15px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f97316;
+            padding: 10px 15px 30px;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 14px 15px;
+            margin-bottom: 8px;
+            text-decoration: none;
+            color: #aaa;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            background: #382113;
+            color: #fb923c;
+        }
+
+        .nav-link.active {
+            background: #382113;
+            color: #f97316;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .topbar p {
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .btn {
+            border: none;
+            background: #f97316;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #fb923c;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #14141f;
+            border: 1px solid #29293a;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .stat-card .number {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .orange {
+            color: #f97316;
+        }
+
+        .yellow {
+            color: #facc15;
+        }
+
+        .green {
+            color: #22c55e;
+        }
+
+        .blue {
+            color: #38bdf8;
+        }
+
+        /* ================= CONTROLS ================= */
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search {
+            flex: 1;
+            min-width: 250px;
+            padding: 13px 15px;
+            background: #14141f;
+            border: 1px solid #29293a;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: #f97316;
+        }
+
+        .filter-btn {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #29293a;
+            background: #14141f;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #382113;
+            color: #f97316;
+            border-color: #f97316;
+        }
+
+        /* ================= TICKET TABLE ================= */
+
+        .ticket-container {
+            background: #14141f;
+            border: 1px solid #29293a;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th,
+        td {
+            padding: 17px;
+            text-align: left;
+            border-bottom: 1px solid #29293a;
+        }
+
+        th {
+            color: #999;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #ddd;
+        }
+
+        tr:hover {
+            background: #191923;
+        }
+
+        .ticket-title {
+            font-weight: bold;
+            color: white;
+        }
+
+        .ticket-id {
+            color: #777;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* ================= BADGES ================= */
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .priority-high {
+            background: #3b1717;
+            color: #ef4444;
+        }
+
+        .priority-medium {
+            background: #3b2e12;
+            color: #facc15;
+        }
+
+        .priority-low {
+            background: #12351f;
+            color: #22c55e;
+        }
+
+        .status-open {
+            background: #102f3b;
+            color: #38bdf8;
+        }
+
+        .status-progress {
+            background: #382a13;
+            color: #f59e0b;
+        }
+
+        .status-resolved {
+            background: #12351f;
+            color: #22c55e;
+        }
+
+        /* ================= ACTION BUTTONS ================= */
+
+        .actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .action-btn {
+            padding: 7px 10px;
+            border-radius: 6px;
+            border: 1px solid #29293a;
+            background: #1b1b27;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            color: white;
+            border-color: #f97316;
+        }
+
+        .delete-btn:hover {
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 550px;
+            background: #14141f;
+            border: 1px solid #29293a;
+            border-radius: 14px;
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            font-size: 25px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #29293a;
+            background: #0b0b12;
+            color: white;
+            outline: none;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #f97316;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cancel-btn {
+            padding: 12px 18px;
+            background: #29293a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* ================= DETAILS ================= */
+
+        .detail-row {
+            padding: 12px 0;
+            border-bottom: 1px solid #29293a;
+        }
+
+        .detail-label {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: white;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+                padding: 25px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎧 <span>SUPPORT</span>AI
+        </div>
+
+        <a href="dashboard.html" class="nav-link">
+            🎧 Dashboard
+        </a>
+
+        <a href="tickets.html" class="nav-link active">
+            🎫 Support Tickets
+        </a>
+
+        <a href="conversations.html" class="nav-link">
+            💬 Conversations
+        </a>
+
+        <a href="../index.html" class="nav-link">
+            🏠 Home
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Support Tickets</h1>
+                <p>Manage, track and resolve customer support tickets.</p>
+            </div>
+
+            <button class="btn" onclick="openAddModal()">
+                + New Ticket
+            </button>
+
+        </div>
+
+
+        <!-- ================= STATS ================= -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+                <h3>Total Tickets</h3>
+                <div class="number orange" id="totalTickets">
+                    5
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Open</h3>
+                <div class="number blue" id="openTickets">
+                    2
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <h3>In Progress</h3>
+                <div class="number yellow" id="progressTickets">
+                    2
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Resolved</h3>
+                <div class="number green" id="resolvedTickets">
+                    1
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ================= SEARCH + FILTER ================= -->
+
+        <div class="controls">
+
+            <input
+                type="text"
+                id="searchInput"
+                class="search"
+                placeholder="Search tickets, customers or ticket ID..."
+                onkeyup="filterTickets()"
+            >
+
+            <button
+                class="filter-btn active"
+                onclick="setFilter('all', this)">
+                All
+            </button>
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('open', this)">
+                Open
+            </button>
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('progress', this)">
+                In Progress
+            </button>
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('resolved', this)">
+                Resolved
+            </button>
+
+            <button
+                class="filter-btn"
+                onclick="setFilter('high', this)">
+                High Priority
+            </button>
+
+        </div>
+
+
+        <!-- ================= TICKET TABLE ================= -->
+
+        <div class="ticket-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Customer</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="ticketTable">
+
+                    <tr
+                        data-status="open"
+                        data-priority="high"
+                        data-search="unable to reset password rahul kumar tk-1024">
+
+                        <td>
+                            <div class="ticket-title">
+                                Unable to reset password
+                            </div>
+
+                            <div class="ticket-id">
+                                #TK-1024
+                            </div>
+                        </td>
+
+                        <td>Rahul Kumar</td>
+
+                        <td>
+                            <span class="badge priority-high">
+                                HIGH
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge status-open">
+                                OPEN
+                            </span>
+                        </td>
+
+                        <td>2 min ago</td>
+
+                        <td>
+                            <div class="actions">
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewTicket(
+                                    'TK-1024',
+                                    'Unable to reset password',
+                                    'Rahul Kumar',
+                                    'High',
+                                    'Open',
+                                    'Customer is unable to reset the account password.'
+                                    )">
+                                    View
+                                </button>
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteTicket(this)">
+                                    Delete
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+
+                    <tr
+                        data-status="progress"
+                        data-priority="high"
+                        data-search="payment issue subscription priya sharma tk-1023">
+
+                        <td>
+                            <div class="ticket-title">
+                                Payment issue with subscription
+                            </div>
+
+                            <div class="ticket-id">
+                                #TK-1023
+                            </div>
+                        </td>
+
+                        <td>Priya Sharma</td>
+
+                        <td>
+                            <span class="badge priority-high">
+                                HIGH
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge status-progress">
+                                IN PROGRESS
+                            </span>
+                        </td>
+
+                        <td>8 min ago</td>
+
+                        <td>
+                            <div class="actions">
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewTicket(
+                                    'TK-1023',
+                                    'Payment issue with subscription',
+                                    'Priya Sharma',
+                                    'High',
+                                    'In Progress',
+                                    'Customer reported that the subscription payment was deducted twice.'
+                                    )">
+                                    View
+                                </button>
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteTicket(this)">
+                                    Delete
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+
+                    <tr
+                        data-status="open"
+                        data-priority="medium"
+                        data-search="mobile application loading arjun reddy tk-1022">
+
+                        <td>
+                            <div class="ticket-title">
+                                Mobile application not loading
+                            </div>
+
+                            <div class="ticket-id">
+                                #TK-1022
+                            </div>
+                        </td>
+
+                        <td>Arjun Reddy</td>
+
+                        <td>
+                            <span class="badge priority-medium">
+                                MEDIUM
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge status-open">
+                                OPEN
+                            </span>
+                        </td>
+
+                        <td>15 min ago</td>
+
+                        <td>
+                            <div class="actions">
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewTicket(
+                                    'TK-1022',
+                                    'Mobile application not loading',
+                                    'Arjun Reddy',
+                                    'Medium',
+                                    'Open',
+                                    'Customer reports that the mobile application does not load properly.'
+                                    )">
+                                    View
+                                </button>
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteTicket(this)">
+                                    Delete
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+
+                    <tr
+                        data-status="progress"
+                        data-priority="low"
+                        data-search="email notification problem sneha patel tk-1021">
+
+                        <td>
+                            <div class="ticket-title">
+                                Email notification problem
+                            </div>
+
+                            <div class="ticket-id">
+                                #TK-1021
+                            </div>
+                        </td>
+
+                        <td>Sneha Patel</td>
+
+                        <td>
+                            <span class="badge priority-low">
+                                LOW
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge status-progress">
+                                IN PROGRESS
+                            </span>
+                        </td>
+
+                        <td>22 min ago</td>
+
+                        <td>
+                            <div class="actions">
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewTicket(
+                                    'TK-1021',
+                                    'Email notification problem',
+                                    'Sneha Patel',
+                                    'Low',
+                                    'In Progress',
+                                    'Customer is not receiving email notifications.'
+                                    )">
+                                    View
+                                </button>
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteTicket(this)">
+                                    Delete
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+
+                    <tr
+                        data-status="resolved"
+                        data-priority="medium"
+                        data-search="refund request kiran rao tk-1020">
+
+                        <td>
+                            <div class="ticket-title">
+                                Refund request
+                            </div>
+
+                            <div class="ticket-id">
+                                #TK-1020
+                            </div>
+                        </td>
+
+                        <td>Kiran Rao</td>
+
+                        <td>
+                            <span class="badge priority-medium">
+                                MEDIUM
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge status-resolved">
+                                RESOLVED
+                            </span>
+                        </td>
+
+                        <td>1 hour ago</td>
+
+                        <td>
+                            <div class="actions">
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewTicket(
+                                    'TK-1020',
+                                    'Refund request',
+                                    'Kiran Rao',
+                                    'Medium',
+                                    'Resolved',
+                                    'Customer requested a refund. The refund was successfully processed.'
+                                    )">
+                                    View
+                                </button>
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteTicket(this)">
+                                    Delete
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     ADD TICKET MODAL
+===================================================== -->
+
+<div class="modal" id="addModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>Create New Ticket</h2>
+
+            <span class="close" onclick="closeAddModal()">
+                &times;
+            </span>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Customer Name</label>
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Enter customer name"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Issue</label>
+
+            <input
+                type="text"
+                id="ticketIssue"
+                placeholder="Enter issue"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Description</label>
+
+            <textarea
+                id="ticketDescription"
+                placeholder="Describe the customer problem..."
+            ></textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Priority</label>
+
+            <select id="ticketPriority">
+
+                <option value="Low">
+                    Low
+                </option>
+
+                <option value="Medium" selected>
+                    Medium
+                </option>
+
+                <option value="High">
+                    High
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="cancel-btn"
+                onclick="closeAddModal()">
+                Cancel
+            </button>
+
+            <button
+                class="btn"
+                onclick="addTicket()">
+                Create Ticket
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     VIEW TICKET MODAL
+===================================================== -->
+
+<div class="modal" id="viewModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>Ticket Details</h2>
+
+            <span class="close" onclick="closeViewModal()">
+                &times;
+            </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Ticket ID
+            </div>
+
+            <div
+                class="detail-value"
+                id="detailId">
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Issue
+            </div>
+
+            <div
+                class="detail-value"
+                id="detailIssue">
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Customer
+            </div>
+
+            <div
+                class="detail-value"
+                id="detailCustomer">
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Priority
+            </div>
+
+            <div
+                class="detail-value"
+                id="detailPriority">
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Status
+            </div>
+
+            <div
+                class="detail-value"
+                id="detailStatus">
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Description
+            </div>
+
+            <div
+                class="detail-value"
+                id="detailDescription">
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn"
+                onclick="closeViewModal()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+    let currentFilter = "all";
+
+
+    /* ================= ADD MODAL ================= */
+
+    function openAddModal() {
+
+        document.getElementById("addModal").style.display = "flex";
+
+    }
+
+
+    function closeAddModal() {
+
+        document.getElementById("addModal").style.display = "none";
+
+    }
+
+
+    /* ================= ADD TICKET ================= */
+
+    function addTicket() {
+
+        const customer =
+            document.getElementById("customerName").value.trim();
+
+        const issue =
+            document.getElementById("ticketIssue").value.trim();
+
+        const description =
+            document.getElementById("ticketDescription").value.trim();
+
+        const priority =
+            document.getElementById("ticketPriority").value;
+
+
+        if (customer === "" || issue === "") {
+
+            alert("Please enter customer name and issue.");
+
+            return;
+
+        }
+
+
+        const table =
+            document.getElementById("ticketTable");
+
+
+        const ticketNumber =
+            1025 + table.rows.length;
+
+        const ticketId =
+            "TK-" + ticketNumber;
+
+
+        let priorityClass = "priority-low";
+
+        if (priority === "High") {
+            priorityClass = "priority-high";
+        }
+
+        if (priority === "Medium") {
+            priorityClass = "priority-medium";
+        }
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.setAttribute("data-status", "open");
+
+        row.setAttribute(
+            "data-priority",
+            priority.toLowerCase()
+        );
+
+        row.setAttribute(
+            "data-search",
+            (
+                issue +
+                " " +
+                customer +
+                " " +
+                ticketId
+            ).toLowerCase()
+        );
+
+
+        row.innerHTML = `
+
+            <td>
+
+                <div class="ticket-title">
+                    ${issue}
+                </div>
+
+                <div class="ticket-id">
+                    #${ticketId}
+                </div>
+
+            </td>
+
+            <td>
+                ${customer}
+            </td>
+
+            <td>
+
+                <span class="badge ${priorityClass}">
+                    ${priority.toUpperCase()}
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="badge status-open">
+                    OPEN
+                </span>
+
+            </td>
+
+            <td>
+                Just now
+            </td>
+
+            <td>
+
+                <div class="actions">
+
+                    <button
+                        class="action-btn"
+                        onclick="viewTicket(
+                        '${ticketId}',
+                        '${escapeText(issue)}',
+                        '${escapeText(customer)}',
+                        '${priority}',
+                        'Open',
+                        '${escapeText(description)}'
+                        )">
+                        View
+                    </button>
+
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteTicket(this)">
+                        Delete
+                    </button>
+
+                </div>
+
+            </td>
+        `;
+
+
+        table.prepend(row);
+
+
+        closeAddModal();
+
+
+        document.getElementById("customerName").value = "";
+
+        document.getElementById("ticketIssue").value = "";
+
+        document.getElementById("ticketDescription").value = "";
+
+        document.getElementById("ticketPriority").value = "Medium";
+
+
+        updateStats();
+
+        filterTickets();
+
+    }
+
+
+    /* ================= VIEW TICKET ================= */
+
+    function viewTicket(
+        id,
+        issue,
+        customer,
+        priority,
+        status,
+        description
+    ) {
+
+        document.getElementById("detailId").textContent =
+            "#" + id;
+
+        document.getElementById("detailIssue").textContent =
+            issue;
+
+        document.getElementById("detailCustomer").textContent =
+            customer;
+
+        document.getElementById("detailPriority").textContent =
+            priority;
+
+        document.getElementById("detailStatus").textContent =
+            status;
+
+        document.getElementById("detailDescription").textContent =
+            description;
+
+
+        document.getElementById("viewModal").style.display =
+            "flex";
+
+    }
+
+
+    function closeViewModal() {
+
+        document.getElementById("viewModal").style.display =
+            "none";
+
+    }
+
+
+    /* ================= DELETE ================= */
+
+    function deleteTicket(button) {
+
+        const confirmation =
+            confirm("Are you sure you want to delete this ticket?");
+
+
+        if (confirmation) {
+
+            button.closest("tr").remove();
+
+            updateStats();
+
+        }
+
+    }
+
+
+    /* ================= SEARCH ================= */
+
+    function filterTickets() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const rows =
+            document.querySelectorAll(
+                "#ticketTable tr"
+            );
+
+
+        rows.forEach(function(row) {
+
+            const rowSearch =
+                row.getAttribute("data-search") || "";
+
+            const status =
+                row.getAttribute("data-status");
+
+            const priority =
+                row.getAttribute("data-priority");
+
+
+            const matchesSearch =
+                rowSearch.includes(search);
+
+
+            let matchesFilter = true;
+
+
+            if (currentFilter === "open") {
+
+                matchesFilter =
+                    status === "open";
+
+            }
+
+            else if (currentFilter === "progress") {
+
+                matchesFilter =
+                    status === "progress";
+
+            }
+
+            else if (currentFilter === "resolved") {
+
+                matchesFilter =
+                    status === "resolved";
+
+            }
+
+            else if (currentFilter === "high") {
+
+                matchesFilter =
+                    priority === "high";
+
+            }
+
+
+            if (
+                matchesSearch &&
+                matchesFilter
+            ) {
+
+                row.style.display = "";
+
+            }
+
+            else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    /* ================= FILTER ================= */
+
+    function setFilter(filter, button) {
+
+        currentFilter = filter;
+
+
+        document
+            .querySelectorAll(".filter-btn")
+            .forEach(function(btn) {
+
+                btn.classList.remove("active");
+
+            });
+
+
+        button.classList.add("active");
+
+
+        filterTickets();
+
+    }
+
+
+    /* ================= UPDATE STATS ================= */
+
+    function updateStats() {
+
+        const rows =
+            document.querySelectorAll(
+                "#ticketTable tr"
+            );
+
+
+        let total = 0;
+
+        let open = 0;
+
+        let progress = 0;
+
+        let resolved = 0;
+
+
+        rows.forEach(function(row) {
+
+            if (row.style.display !== "none") {
+                // Statistics are calculated from actual rows below.
+            }
+
+            const status =
+                row.getAttribute("data-status");
+
+
+            total++;
+
+
+            if (status === "open") {
+                open++;
+            }
+
+            else if (status === "progress") {
+                progress++;
+            }
+
+            else if (status === "resolved") {
+                resolved++;
+            }
+
+        });
+
+
+        document.getElementById("totalTickets").textContent =
+            total;
+
+        document.getElementById("openTickets").textContent =
+            open;
+
+        document.getElementById("progressTickets").textContent =
+            progress;
+
+        document.getElementById("resolvedTickets").textContent =
+            resolved;
+
+    }
+
+
+    /* ================= ESCAPE TEXT ================= */
+
+    function escapeText(text) {
+
+        return text
+            .replace(/'/g, "\\'")
+            .replace(/"/g, "&quot;");
+
+    }
+
+
+    /* ================= CLOSE MODAL ON OUTSIDE CLICK ================= */
+
+    window.onclick = function(event) {
+
+        const addModal =
+            document.getElementById("addModal");
+
+        const viewModal =
+            document.getElementById("viewModal");
+
+
+        if (event.target === addModal) {
+
+            closeAddModal();
+
+        }
+
+
+        if (event.target === viewModal) {
+
+            closeViewModal();
+
+        }
+
+    };
+
+
+    /* ================= INITIAL STATS ================= */
+
+    updateStats();
+
+</script>
+
+</body>
+</html>

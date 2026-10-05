@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Agent - Analytics</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #120d24;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1b1435;
+            padding: 25px 18px;
+            border-right: 1px solid #302451;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #a78bfa;
+        }
+
+        .nav-title {
+            font-size: 12px;
+            color: #8f88a8;
+            margin: 20px 12px 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: #c8c2dc;
+            padding: 13px 14px;
+            margin: 6px 0;
+            border-radius: 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #302354;
+            color: white;
+        }
+
+        .nav-link.active {
+            border-left: 3px solid #a78bfa;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+        }
+
+        .topbar p {
+            color: #9992b3;
+            margin-top: 6px;
+        }
+
+        .profile {
+            background: #211a3c;
+            padding: 11px 18px;
+            border-radius: 12px;
+            color: #d8d2ea;
+        }
+
+        .period-select {
+            background: #251d42;
+            border: 1px solid #3a3158;
+            color: white;
+            padding: 11px 14px;
+            border-radius: 9px;
+            outline: none;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #1b1435;
+            border: 1px solid #302451;
+            border-radius: 15px;
+            padding: 21px;
+        }
+
+        .stat-card h3 {
+            color: #9c95b5;
+            font-size: 14px;
+            font-weight: normal;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 29px;
+            font-weight: bold;
+        }
+
+        .stat-change {
+            color: #a78bfa;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #1b1435;
+            border: 1px solid #302451;
+            border-radius: 15px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 22px;
+        }
+
+        /* Chart */
+        .chart {
+            height: 260px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 15px;
+            padding: 15px 10px 30px;
+            border-bottom: 1px solid #3a3158;
+        }
+
+        .bar-wrapper {
+            height: 100%;
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .bar {
+            width: 42px;
+            background: #a78bfa;
+            border-radius: 7px 7px 0 0;
+            min-height: 20px;
+            transition: 0.3s;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+            transform: translateY(-4px);
+        }
+
+        .days {
+            display: flex;
+            justify-content: space-around;
+            color: #85809b;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        /* Progress */
+        .progress-item {
+            margin-bottom: 22px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .progress-top span:last-child {
+            color: #a78bfa;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #2c2544;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #a78bfa;
+            border-radius: 10px;
+        }
+
+        /* Focus */
+        .focus-box {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .focus-number {
+            font-size: 44px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .focus-label {
+            color: #918aa8;
+            font-size: 13px;
+        }
+
+        .focus-info {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #30274a;
+            color: #bcb5d0;
+            font-size: 13px;
+        }
+
+        /* Activity */
+        .activity {
+            display: flex;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #2c2445;
+        }
+
+        .activity:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 35px;
+            height: 35px;
+            background: #302552;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            color: #c7c1d7;
+        }
+
+        .activity-time {
+            color: #77718e;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            AI <span>Agents</span>
+        </div>
+
+        <div class="nav-title">Productivity</div>
+
+        <a href="dashboard.html" class="nav-link">
+            🏠 Dashboard
+        </a>
+
+        <a href="tasks.html" class="nav-link">
+            ✓ Tasks
+        </a>
+
+        <a href="analytics.html" class="nav-link active">
+            📊 Analytics
+        </a>
+
+        <div class="nav-title">Main</div>
+
+        <a href="../index.html" class="nav-link">
+            ← Home
+        </a>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+
+            <div>
+                <h1>Productivity Analytics</h1>
+                <p>Track your productivity and performance.</p>
+            </div>
+
+            <div>
+                <select class="period-select" id="period"
+                        onchange="changePeriod()">
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="90">Last 90 Days</option>
+                </select>
+
+                <span class="profile">
+                    👤 Productivity User
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <h3>Tasks Completed</h3>
+                <div class="stat-number" id="completed">
+                    18
+                </div>
+                <div class="stat-change">
+                    ↑ 15% from previous period
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Completion Rate</h3>
+                <div class="stat-number" id="rate">
+                    75%
+                </div>
+                <div class="stat-change">
+                    ↑ 8% improvement
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Focus Hours</h3>
+                <div class="stat-number" id="focus">
+                    12.5
+                </div>
+                <div class="stat-change">
+                    ↑ 2.3 hours
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Productivity Score</h3>
+                <div class="stat-number" id="score">
+                    86
+                </div>
+                <div class="stat-change">
+                    Excellent performance
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Main Grid -->
+        <div class="grid">
+
+            <!-- Left -->
+            <div>
+
+                <!-- Productivity Chart -->
+                <div class="card">
+
+                    <h2>Daily Productivity</h2>
+
+                    <div class="chart">
+
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:55%"></div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:72%"></div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:48%"></div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:85%"></div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:68%"></div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:92%"></div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar" style="height:78%"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="days">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Goal Progress -->
+                <div class="card">
+
+                    <h2>Goal Progress</h2>
+
+                    <div class="progress-item">
+
+                        <div class="progress-top">
+                            <span>Complete project</span>
+                            <span>85%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill"
+                                 style="width:85%">
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-item">
+
+                        <div class="progress-top">
+                            <span>Improve focus time</span>
+                            <span>72%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill"
+                                 style="width:72%">
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-item">
+
+                        <div class="progress-top">
+                            <span>Build daily routine</span>
+                            <span>91%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill"
+                                 style="width:91%">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Right -->
+            <div>
+
+                <!-- Focus Time -->
+                <div class="card">
+
+                    <h2>Focus Time</h2>
+
+                    <div class="focus-box">
+
+                        <div class="focus-number">
+                            12.5h
+                        </div>
+
+                        <div class="focus-label">
+                            Total focused time
+                        </div>
+
+                        <div class="focus-info">
+                            Average: 1h 47m per day
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Recent Activity -->
+                <div class="card">
+
+                    <h2>Recent Activity</h2>
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            ✓
+                        </div>
+
+                        <div>
+                            <div class="activity-text">
+                                Completed 3 tasks
+                            </div>
+
+                            <div class="activity-time">
+                                Today
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            🎯
+                        </div>
+
+                        <div>
+                            <div class="activity-text">
+                                Completed a focus session
+                            </div>
+
+                            <div class="activity-time">
+                                Today
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            🏆
+                        </div>
+
+                        <div>
+                            <div class="activity-text">
+                                Reached weekly goal
+                            </div>
+
+                            <div class="activity-time">
+                                Yesterday
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            📈
+                        </div>
+
+                        <div>
+                            <div class="activity-text">
+                                Productivity score increased
+                            </div>
+
+                            <div class="activity-time">
+                                2 days ago
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    function changePeriod() {
+
+        const period =
+            document.getElementById("period").value;
+
+        const completed =
+            document.getElementById("completed");
+
+        const rate =
+            document.getElementById("rate");
+
+        const focus =
+            document.getElementById("focus");
+
+        const score =
+            document.getElementById("score");
+
+
+        if (period === "7") {
+
+            completed.textContent = "18";
+            rate.textContent = "75%";
+            focus.textContent = "12.5";
+            score.textContent = "86";
+
+        }
+
+        else if (period === "30") {
+
+            completed.textContent = "82";
+            rate.textContent = "79%";
+            focus.textContent = "54.8";
+            score.textContent = "89";
+
+        }
+
+        else {
+
+            completed.textContent = "241";
+            rate.textContent = "81%";
+            focus.textContent = "168.5";
+            score.textContent = "92";
+
+        }
+
+    }
+
+</script>
+
+</body>
+</html>

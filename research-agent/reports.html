@@ -1,0 +1,2734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Research Reports | Research Agent</title>
+
+    <link rel="stylesheet"
+          href="../css/style.css">
+
+
+    <style>
+
+        /* =========================
+           BASIC RESET
+        ========================= */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b0b12;
+            color: white;
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #10101a;
+
+            border-right: 1px solid #29293a;
+
+            padding: 25px 18px;
+        }
+
+
+        .logo {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            color: #06b6d4;
+
+            margin-bottom: 35px;
+        }
+
+
+        .logo span {
+            color: white;
+        }
+
+
+        .menu-title {
+
+            color: #77778a;
+
+            font-size: 12px;
+
+            margin-bottom: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+
+        .nav-link {
+
+            display: block;
+
+            text-decoration: none;
+
+            color: #aaaaba;
+
+            padding: 13px 15px;
+
+            border-radius: 10px;
+
+            margin-bottom: 8px;
+
+            transition: 0.3s;
+        }
+
+
+        .nav-link:hover {
+
+            background: #1b1b28;
+
+            color: white;
+        }
+
+
+        .nav-link.active {
+
+            background: #12303a;
+
+            color: #22d3ee;
+        }
+
+
+        .home-link {
+
+            margin-top: 25px;
+        }
+
+
+        /* =========================
+           MAIN AREA
+        ========================= */
+
+        .main {
+
+            margin-left: 250px;
+
+            padding: 35px;
+        }
+
+
+        /* =========================
+           TOP BAR
+        ========================= */
+
+        .topbar {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .page-title h1 {
+
+            font-size: 32px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .page-title p {
+
+            color: #858598;
+
+            font-size: 14px;
+        }
+
+
+        .add-btn {
+
+            background: #06b6d4;
+
+            color: #001014;
+
+            border: none;
+
+            padding: 13px 20px;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .add-btn:hover {
+
+            background: #22d3ee;
+        }
+
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat-card {
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 14px;
+
+            padding: 22px;
+        }
+
+
+        .stat-title {
+
+            color: #858598;
+
+            font-size: 13px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .stat-number {
+
+            font-size: 28px;
+
+            font-weight: bold;
+        }
+
+
+        .cyan {
+            color: #22d3ee;
+        }
+
+
+        .green {
+            color: #4ade80;
+        }
+
+
+        .orange {
+            color: #fbbf24;
+        }
+
+
+        .purple {
+            color: #a78bfa;
+        }
+
+
+        /* =========================
+           SEARCH + FILTER
+        ========================= */
+
+        .toolbar {
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 14px;
+
+            padding: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .search {
+
+            width: 100%;
+
+            padding: 13px 15px;
+
+            background: #0b0b12;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            color: white;
+
+            outline: none;
+
+            margin-bottom: 15px;
+        }
+
+
+        .search:focus {
+
+            border-color: #06b6d4;
+        }
+
+
+        .filters {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .filter-btn {
+
+            background: #1b1b28;
+
+            color: #aaaaba;
+
+            border: 1px solid #29293a;
+
+            padding: 9px 15px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+        }
+
+
+        .filter-btn:hover {
+
+            color: white;
+        }
+
+
+        .filter-btn.active {
+
+            background: #12303a;
+
+            color: #22d3ee;
+
+            border-color: #06b6d4;
+        }
+
+
+        /* =========================
+           REPORT GRID
+        ========================= */
+
+        .report-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .report-card {
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 15px;
+
+            padding: 22px;
+
+            transition: 0.3s;
+        }
+
+
+        .report-card:hover {
+
+            border-color: #06b6d4;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           REPORT HEADER
+        ========================= */
+
+        .report-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            margin-bottom: 15px;
+        }
+
+
+        .report-icon {
+
+            width: 45px;
+
+            height: 45px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #12303a;
+
+            border-radius: 10px;
+
+            font-size: 21px;
+        }
+
+
+        .report-status {
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            padding: 6px 10px;
+
+            border-radius: 6px;
+        }
+
+
+        .report-status.ready {
+
+            background: #123020;
+
+            color: #4ade80;
+        }
+
+
+        .report-status.generating {
+
+            background: #382c12;
+
+            color: #fbbf24;
+        }
+
+
+        .report-status.draft {
+
+            background: #262036;
+
+            color: #a78bfa;
+        }
+
+
+        /* =========================
+           REPORT TITLE
+        ========================= */
+
+        .report-title {
+
+            font-size: 19px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .report-description {
+
+            color: #858598;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            margin-bottom: 18px;
+        }
+
+
+        /* =========================
+           REPORT DETAILS
+        ========================= */
+
+        .report-details {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .detail {
+
+            background: #0b0b12;
+
+            border-radius: 8px;
+
+            padding: 11px;
+        }
+
+
+        .detail-label {
+
+            color: #77778a;
+
+            font-size: 10px;
+
+            margin-bottom: 5px;
+
+            text-transform: uppercase;
+        }
+
+
+        .detail-value {
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           CONFIDENCE
+        ========================= */
+
+        .confidence {
+
+            margin-bottom: 20px;
+        }
+
+
+        .confidence-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            font-size: 12px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .confidence-header span:first-child {
+
+            color: #858598;
+        }
+
+
+        .confidence-header span:last-child {
+
+            color: #22d3ee;
+
+            font-weight: bold;
+        }
+
+
+        .confidence-bar {
+
+            width: 100%;
+
+            height: 7px;
+
+            background: #29293a;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+
+        .confidence-fill {
+
+            height: 100%;
+
+            background: #06b6d4;
+
+            border-radius: 10px;
+        }
+
+
+        /* =========================
+           REPORT FOOTER
+        ========================= */
+
+        .report-footer {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding-top: 15px;
+
+            border-top: 1px solid #29293a;
+        }
+
+
+        .report-date {
+
+            color: #77778a;
+
+            font-size: 11px;
+        }
+
+
+        .report-actions {
+
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .action-btn {
+
+            background: #1b1b28;
+
+            border: 1px solid #29293a;
+
+            color: #aaaaba;
+
+            padding: 8px 12px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 11px;
+        }
+
+
+        .action-btn:hover {
+
+            color: white;
+
+            border-color: #06b6d4;
+        }
+
+
+        .delete-btn:hover {
+
+            color: #f87171;
+
+            border-color: #f87171;
+        }
+
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0,0,0,0.75);
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 1000;
+        }
+
+
+        .modal-box {
+
+            width: 600px;
+
+            max-width: 92%;
+
+            max-height: 85vh;
+
+            overflow-y: auto;
+
+            background: #14141f;
+
+            border: 1px solid #29293a;
+
+            border-radius: 15px;
+
+            padding: 25px;
+        }
+
+
+        .modal-box h2 {
+
+            margin-bottom: 20px;
+        }
+
+
+        .form-group {
+
+            margin-bottom: 16px;
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            color: #aaaaba;
+
+            font-size: 13px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+
+            width: 100%;
+
+            padding: 12px;
+
+            background: #0b0b12;
+
+            border: 1px solid #29293a;
+
+            border-radius: 8px;
+
+            color: white;
+
+            outline: none;
+        }
+
+
+        .form-group textarea {
+
+            resize: vertical;
+
+            min-height: 100px;
+        }
+
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+
+            border-color: #06b6d4;
+        }
+
+
+        .modal-buttons {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+
+        .cancel-btn {
+
+            background: #1b1b28;
+
+            border: 1px solid #29293a;
+
+            color: white;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+
+        .create-btn {
+
+            background: #06b6d4;
+
+            border: none;
+
+            color: #001014;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           REPORT PREVIEW
+        ========================= */
+
+        .preview-title {
+
+            color: #22d3ee;
+
+            font-size: 24px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .preview-meta {
+
+            color: #858598;
+
+            font-size: 12px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .preview-section {
+
+            margin-bottom: 20px;
+        }
+
+
+        .preview-section h3 {
+
+            color: white;
+
+            margin-bottom: 8px;
+
+            font-size: 16px;
+        }
+
+
+        .preview-section p {
+
+            color: #aaaaba;
+
+            line-height: 1.7;
+
+            font-size: 13px;
+        }
+
+
+        .preview-section ul {
+
+            margin-left: 20px;
+
+            color: #aaaaba;
+
+            line-height: 1.8;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .report-grid {
+
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                width: 200px;
+            }
+
+
+            .main {
+
+                margin-left: 200px;
+
+                padding: 20px;
+            }
+
+
+            .topbar {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .stats {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .report-details {
+
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+
+    <div class="logo">
+
+        RESEARCH<span>AI</span>
+
+    </div>
+
+
+    <div class="menu-title">
+
+        Research Agent
+
+    </div>
+
+
+    <a href="dashboard.html"
+       class="nav-link">
+
+        📊 Dashboard
+
+    </a>
+
+
+    <a href="tasks.html"
+       class="nav-link">
+
+        📋 Research Tasks
+
+    </a>
+
+
+    <a href="reports.html"
+       class="nav-link active">
+
+        📄 Reports
+
+    </a>
+
+
+    <a href="../index.html"
+       class="nav-link home-link">
+
+        🏠 Home
+
+    </a>
+
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+
+        <div class="page-title">
+
+            <h1>
+                Research Reports
+            </h1>
+
+            <p>
+                View, manage and generate AI-powered research reports.
+            </p>
+
+        </div>
+
+
+        <button
+            class="add-btn"
+            onclick="openReportModal()">
+
+            + Create Report
+
+        </button>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================= -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Reports
+            </div>
+
+            <div
+                class="stat-number cyan"
+                id="totalReports">
+
+                4
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Ready
+            </div>
+
+            <div
+                class="stat-number green"
+                id="readyReports">
+
+                2
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Generating
+            </div>
+
+            <div
+                class="stat-number orange"
+                id="generatingReports">
+
+                1
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Drafts
+            </div>
+
+            <div
+                class="stat-number purple"
+                id="draftReports">
+
+                1
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         SEARCH AND FILTER
+    ================================================= -->
+
+    <section class="toolbar">
+
+
+        <input
+            type="text"
+            class="search"
+            id="searchInput"
+            placeholder="Search research reports..."
+            onkeyup="searchReports()">
+
+
+        <div class="filters">
+
+
+            <button
+                class="filter-btn active"
+                onclick="filterReports('all', this)">
+
+                All
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="filterReports('ready', this)">
+
+                Ready
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="filterReports('generating', this)">
+
+                Generating
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                onclick="filterReports('draft', this)">
+
+                Draft
+
+            </button>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         REPORT GRID
+    ================================================= -->
+
+    <section
+        class="report-grid"
+        id="reportGrid">
+
+
+
+        <!-- REPORT 1 -->
+
+        <article
+            class="report-card"
+            data-status="ready">
+
+
+            <div class="report-header">
+
+
+                <div class="report-icon">
+                    📚
+                </div>
+
+
+                <span class="report-status ready">
+                    READY
+                </span>
+
+
+            </div>
+
+
+            <h2 class="report-title">
+
+                Generative AI in Education
+
+            </h2>
+
+
+            <p class="report-description">
+
+                Comprehensive analysis of how generative
+                artificial intelligence is changing teaching,
+                learning and educational technology.
+
+            </p>
+
+
+            <div class="report-details">
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Type
+                    </div>
+
+                    <div class="detail-value">
+                        Academic
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Sources
+                    </div>
+
+                    <div class="detail-value">
+                        48
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Pages
+                    </div>
+
+                    <div class="detail-value">
+                        18
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="confidence">
+
+
+                <div class="confidence-header">
+
+                    <span>
+                        AI Confidence
+                    </span>
+
+                    <span>
+                        94%
+                    </span>
+
+                </div>
+
+
+                <div class="confidence-bar">
+
+                    <div
+                        class="confidence-fill"
+                        style="width:94%;">
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="report-footer">
+
+
+                <span class="report-date">
+
+                    Updated Oct 04, 2026
+
+                </span>
+
+
+                <div class="report-actions">
+
+
+                    <button
+                        class="action-btn"
+                        onclick="viewReport(this)">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="action-btn"
+                        onclick="downloadReport(this)">
+
+                        Download
+
+                    </button>
+
+
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteReport(this)">
+
+                        Delete
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- REPORT 2 -->
+
+        <article
+            class="report-card"
+            data-status="ready">
+
+
+            <div class="report-header">
+
+
+                <div class="report-icon">
+                    🤖
+                </div>
+
+
+                <span class="report-status ready">
+                    READY
+                </span>
+
+
+            </div>
+
+
+            <h2 class="report-title">
+
+                Machine Learning Trends 2026
+
+            </h2>
+
+
+            <p class="report-description">
+
+                Research report covering current machine
+                learning technologies, industry trends and
+                emerging research directions.
+
+            </p>
+
+
+            <div class="report-details">
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Type
+                    </div>
+
+                    <div class="detail-value">
+                        Technology
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Sources
+                    </div>
+
+                    <div class="detail-value">
+                        56
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Pages
+                    </div>
+
+                    <div class="detail-value">
+                        24
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="confidence">
+
+
+                <div class="confidence-header">
+
+                    <span>
+                        AI Confidence
+                    </span>
+
+                    <span>
+                        91%
+                    </span>
+
+                </div>
+
+
+                <div class="confidence-bar">
+
+                    <div
+                        class="confidence-fill"
+                        style="width:91%;">
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="report-footer">
+
+
+                <span class="report-date">
+
+                    Updated Oct 03, 2026
+
+                </span>
+
+
+                <div class="report-actions">
+
+
+                    <button
+                        class="action-btn"
+                        onclick="viewReport(this)">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="action-btn"
+                        onclick="downloadReport(this)">
+
+                        Download
+
+                    </button>
+
+
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteReport(this)">
+
+                        Delete
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- REPORT 3 -->
+
+        <article
+            class="report-card"
+            data-status="generating">
+
+
+            <div class="report-header">
+
+
+                <div class="report-icon">
+                    🏥
+                </div>
+
+
+                <span class="report-status generating">
+                    GENERATING
+                </span>
+
+
+            </div>
+
+
+            <h2 class="report-title">
+
+                AI in Healthcare Market
+
+            </h2>
+
+
+            <p class="report-description">
+
+                Market research covering artificial
+                intelligence applications in healthcare,
+                opportunities and future growth.
+
+            </p>
+
+
+            <div class="report-details">
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Type
+                    </div>
+
+                    <div class="detail-value">
+                        Market
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Sources
+                    </div>
+
+                    <div class="detail-value">
+                        31
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Pages
+                    </div>
+
+                    <div class="detail-value">
+                        12
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="confidence">
+
+
+                <div class="confidence-header">
+
+                    <span>
+                        AI Confidence
+                    </span>
+
+                    <span>
+                        68%
+                    </span>
+
+                </div>
+
+
+                <div class="confidence-bar">
+
+                    <div
+                        class="confidence-fill"
+                        style="width:68%;">
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="report-footer">
+
+
+                <span class="report-date">
+
+                    Generating...
+
+                </span>
+
+
+                <div class="report-actions">
+
+
+                    <button
+                        class="action-btn"
+                        onclick="viewReport(this)">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="action-btn"
+                        onclick="downloadReport(this)">
+
+                        Download
+
+                    </button>
+
+
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteReport(this)">
+
+                        Delete
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- REPORT 4 -->
+
+        <article
+            class="report-card"
+            data-status="draft">
+
+
+            <div class="report-header">
+
+
+                <div class="report-icon">
+                    🌐
+                </div>
+
+
+                <span class="report-status draft">
+                    DRAFT
+                </span>
+
+
+            </div>
+
+
+            <h2 class="report-title">
+
+                Web Development Research
+
+            </h2>
+
+
+            <p class="report-description">
+
+                Research covering modern web development
+                technologies, frameworks, tools and
+                development practices.
+
+            </p>
+
+
+            <div class="report-details">
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Type
+                    </div>
+
+                    <div class="detail-value">
+                        Technical
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Sources
+                    </div>
+
+                    <div class="detail-value">
+                        27
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Pages
+                    </div>
+
+                    <div class="detail-value">
+                        10
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="confidence">
+
+
+                <div class="confidence-header">
+
+                    <span>
+                        AI Confidence
+                    </span>
+
+                    <span>
+                        75%
+                    </span>
+
+                </div>
+
+
+                <div class="confidence-bar">
+
+                    <div
+                        class="confidence-fill"
+                        style="width:75%;">
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="report-footer">
+
+
+                <span class="report-date">
+
+                    Draft created Oct 02, 2026
+
+                </span>
+
+
+                <div class="report-actions">
+
+
+                    <button
+                        class="action-btn"
+                        onclick="viewReport(this)">
+
+                        View
+
+                    </button>
+
+
+                    <button
+                        class="action-btn"
+                        onclick="downloadReport(this)">
+
+                        Download
+
+                    </button>
+
+
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteReport(this)">
+
+                        Delete
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     CREATE REPORT MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="reportModal">
+
+
+    <div class="modal-box">
+
+
+        <h2>
+            Create Research Report
+        </h2>
+
+
+        <div class="form-group">
+
+            <label>
+                Report Title
+            </label>
+
+            <input
+                type="text"
+                id="reportTitle"
+                placeholder="Enter report title">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                id="reportDescription"
+                placeholder="Enter report description">
+            </textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Report Type
+            </label>
+
+            <select id="reportType">
+
+                <option>
+                    Academic
+                </option>
+
+                <option>
+                    Technology
+                </option>
+
+                <option>
+                    Market
+                </option>
+
+                <option>
+                    Technical
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+
+            <button
+                class="cancel-btn"
+                onclick="closeReportModal()">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                class="create-btn"
+                onclick="createReport()">
+
+                Create Report
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     REPORT PREVIEW MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="previewModal">
+
+
+    <div class="modal-box">
+
+
+        <div id="previewContent">
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+
+            <button
+                class="cancel-btn"
+                onclick="closePreview()">
+
+                Close
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   OPEN CREATE REPORT MODAL
+===================================================== */
+
+function openReportModal() {
+
+    document.getElementById("reportModal")
+        .style.display = "flex";
+
+}
+
+
+
+/* =====================================================
+   CLOSE CREATE REPORT MODAL
+===================================================== */
+
+function closeReportModal() {
+
+    document.getElementById("reportModal")
+        .style.display = "none";
+
+}
+
+
+
+/* =====================================================
+   CREATE REPORT
+===================================================== */
+
+function createReport() {
+
+
+    const title =
+        document
+        .getElementById("reportTitle")
+        .value
+        .trim();
+
+
+    const description =
+        document
+        .getElementById("reportDescription")
+        .value
+        .trim();
+
+
+    const type =
+        document
+        .getElementById("reportType")
+        .value;
+
+
+    if (title === "") {
+
+        alert("Please enter a report title.");
+
+        return;
+
+    }
+
+
+    if (description === "") {
+
+        alert("Please enter a description.");
+
+        return;
+
+    }
+
+
+    const grid =
+        document.getElementById("reportGrid");
+
+
+    const card =
+        document.createElement("article");
+
+
+    card.className = "report-card";
+
+    card.setAttribute(
+        "data-status",
+        "draft"
+    );
+
+
+    card.innerHTML = `
+
+        <div class="report-header">
+
+            <div class="report-icon">
+                📄
+            </div>
+
+            <span class="report-status draft">
+                DRAFT
+            </span>
+
+        </div>
+
+
+        <h2 class="report-title">
+            ${title}
+        </h2>
+
+
+        <p class="report-description">
+            ${description}
+        </p>
+
+
+        <div class="report-details">
+
+            <div class="detail">
+
+                <div class="detail-label">
+                    Type
+                </div>
+
+                <div class="detail-value">
+                    ${type}
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-label">
+                    Sources
+                </div>
+
+                <div class="detail-value">
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-label">
+                    Pages
+                </div>
+
+                <div class="detail-value">
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="confidence">
+
+            <div class="confidence-header">
+
+                <span>
+                    AI Confidence
+                </span>
+
+                <span>
+                    0%
+                </span>
+
+            </div>
+
+
+            <div class="confidence-bar">
+
+                <div
+                    class="confidence-fill"
+                    style="width:0%;">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="report-footer">
+
+            <span class="report-date">
+
+                Draft created today
+
+            </span>
+
+
+            <div class="report-actions">
+
+                <button
+                    class="action-btn"
+                    onclick="viewReport(this)">
+
+                    View
+
+                </button>
+
+
+                <button
+                    class="action-btn"
+                    onclick="downloadReport(this)">
+
+                    Download
+
+                </button>
+
+
+                <button
+                    class="action-btn delete-btn"
+                    onclick="deleteReport(this)">
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    grid.prepend(card);
+
+
+    document.getElementById("reportTitle")
+        .value = "";
+
+
+    document.getElementById("reportDescription")
+        .value = "";
+
+
+    closeReportModal();
+
+
+    updateReportStats();
+
+}
+
+
+
+/* =====================================================
+   DELETE REPORT
+===================================================== */
+
+function deleteReport(button) {
+
+
+    const card =
+        button.closest(".report-card");
+
+
+    if (
+        confirm(
+            "Are you sure you want to delete this report?"
+        )
+    ) {
+
+        card.remove();
+
+        updateReportStats();
+
+    }
+
+}
+
+
+
+/* =====================================================
+   UPDATE REPORT STATISTICS
+===================================================== */
+
+function updateReportStats() {
+
+
+    const reports =
+        document.querySelectorAll(
+            ".report-card"
+        );
+
+
+    let ready = 0;
+
+    let generating = 0;
+
+    let draft = 0;
+
+
+    reports.forEach(report => {
+
+
+        const status =
+            report.getAttribute(
+                "data-status"
+            );
+
+
+        if (status === "ready") {
+
+            ready++;
+
+        }
+
+
+        else if (status === "generating") {
+
+            generating++;
+
+        }
+
+
+        else if (status === "draft") {
+
+            draft++;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "totalReports"
+    ).textContent = reports.length;
+
+
+    document.getElementById(
+        "readyReports"
+    ).textContent = ready;
+
+
+    document.getElementById(
+        "generatingReports"
+    ).textContent = generating;
+
+
+    document.getElementById(
+        "draftReports"
+    ).textContent = draft;
+
+}
+
+
+
+/* =====================================================
+   FILTER REPORTS
+===================================================== */
+
+function filterReports(
+    filter,
+    button
+) {
+
+
+    const reports =
+        document.querySelectorAll(
+            ".report-card"
+        );
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".filter-btn"
+        );
+
+
+    buttons.forEach(btn => {
+
+        btn.classList.remove(
+            "active"
+        );
+
+    });
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    reports.forEach(report => {
+
+
+        const status =
+            report.getAttribute(
+                "data-status"
+            );
+
+
+        if (filter === "all") {
+
+            report.style.display =
+                "block";
+
+        }
+
+
+        else {
+
+            if (status === filter) {
+
+                report.style.display =
+                    "block";
+
+            }
+
+            else {
+
+                report.style.display =
+                    "none";
+
+            }
+
+        }
+
+    });
+
+}
+
+
+
+/* =====================================================
+   SEARCH REPORTS
+===================================================== */
+
+function searchReports() {
+
+
+    const search =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+
+    const reports =
+        document.querySelectorAll(
+            ".report-card"
+        );
+
+
+    reports.forEach(report => {
+
+
+        const text =
+            report.innerText
+            .toLowerCase();
+
+
+        if (
+            text.includes(search)
+        ) {
+
+            report.style.display =
+                "block";
+
+        }
+
+        else {
+
+            report.style.display =
+                "none";
+
+        }
+
+    });
+
+}
+
+
+
+/* =====================================================
+   VIEW REPORT
+===================================================== */
+
+function viewReport(button) {
+
+
+    const card =
+        button.closest(
+            ".report-card"
+        );
+
+
+    const title =
+        card.querySelector(
+            ".report-title"
+        ).textContent.trim();
+
+
+    const description =
+        card.querySelector(
+            ".report-description"
+        ).textContent.trim();
+
+
+    const status =
+        card.querySelector(
+            ".report-status"
+        ).textContent.trim();
+
+
+    const content = `
+
+        <div class="preview-title">
+            ${title}
+        </div>
+
+
+        <div class="preview-meta">
+            Status: ${status}
+        </div>
+
+
+        <div class="preview-section">
+
+            <h3>
+                Executive Summary
+            </h3>
+
+            <p>
+                ${description}
+                This report provides a structured
+                research analysis based on the collected
+                sources and available research findings.
+            </p>
+
+        </div>
+
+
+        <div class="preview-section">
+
+            <h3>
+                Key Findings
+            </h3>
+
+            <ul>
+
+                <li>
+                    Important research trends were
+                    identified from the available sources.
+                </li>
+
+                <li>
+                    Multiple perspectives were compared
+                    during the research process.
+                </li>
+
+                <li>
+                    The findings can be used for further
+                    research and analysis.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="preview-section">
+
+            <h3>
+                Conclusion
+            </h3>
+
+            <p>
+                The research indicates that the topic
+                requires continuous analysis as new
+                information and developments become
+                available.
+            </p>
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "previewContent"
+    ).innerHTML = content;
+
+
+    document.getElementById(
+        "previewModal"
+    ).style.display = "flex";
+
+}
+
+
+
+/* =====================================================
+   CLOSE PREVIEW
+===================================================== */
+
+function closePreview() {
+
+    document.getElementById(
+        "previewModal"
+    ).style.display = "none";
+
+}
+
+
+
+/* =====================================================
+   DOWNLOAD REPORT
+===================================================== */
+
+function downloadReport(button) {
+
+
+    const card =
+        button.closest(
+            ".report-card"
+        );
+
+
+    const title =
+        card.querySelector(
+            ".report-title"
+        ).textContent.trim();
+
+
+    const description =
+        card.querySelector(
+            ".report-description"
+        ).textContent.trim();
+
+
+    const reportText =
+
+`RESEARCH REPORT
+
+Title:
+${title}
+
+
+Description:
+${description}
+
+
+Generated by:
+Research Agent
+
+
+Key Findings:
+- Research information was collected.
+- Relevant sources were analyzed.
+- Research trends were identified.
+- Findings can be used for further study.
+
+
+Conclusion:
+The research report provides a structured
+summary of the selected topic.
+`;
+
+
+    const blob =
+        new Blob(
+            [reportText],
+            {
+                type: "text/plain"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+
+    link.download =
+        title.replace(
+            /[^a-z0-9]/gi,
+            "_"
+        ) + ".txt";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+
+/* =====================================================
+   CLOSE MODALS WHEN CLICKING OUTSIDE
+===================================================== */
+
+window.onclick =
+function(event) {
+
+
+    const reportModal =
+        document.getElementById(
+            "reportModal"
+        );
+
+
+    const previewModal =
+        document.getElementById(
+            "previewModal"
+        );
+
+
+    if (
+        event.target === reportModal
+    ) {
+
+        closeReportModal();
+
+    }
+
+
+    if (
+        event.target === previewModal
+    ) {
+
+        closePreview();
+
+    }
+
+};
+
+
+</script>
+
+
+</body>
+
+</html>
