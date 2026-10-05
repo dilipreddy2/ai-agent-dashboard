@@ -86,6 +86,7 @@ Pages:
 - Dashboard
 - Conversations
 - Activity
+- Tickets
 
 ### ✍️ AI Content Agent
 
